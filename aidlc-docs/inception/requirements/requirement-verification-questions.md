@@ -1,6 +1,6 @@
 # Preguntas y decisiones — PRD PanelaTeam
 
-**Estado: pendientes de validación · 12 de septiembre de 2026**
+**Versión 0.2 · Estado: decisiones parcialmente confirmadas; validación y gates pendientes · 12 de septiembre de 2026**
 
 Las respuestas conocidas se conservan separadas de las propuestas. Ninguna opción sugerida cuenta como aprobación. El PRD puede revisarse completo mientras estos puntos se resuelven; no se inicia implementación por el hecho de haberlo redactado.
 
@@ -12,7 +12,10 @@ Las respuestas conocidas se conservan separadas de las propuestas. Ninguna opci�
 | Segmento | “tiendas seccionadas de abarrotes que tengan distincion” |
 | Material de demo | “vamos a usar imagenes y videos de internet” |
 | Visión | Conexión de cámaras, información estructurada y agentes que coordinen stock/cambios y evalúen secciones, productos, permanencia y promociones |
-| Encargo vigente | “siguiendo con el proceso de HardcoreAI y AI DLC procede a construir el PRD” |
+| Método del PRD | “siguiendo con el proceso de HardcoreAI y AI DLC procede a construir el PRD” |
+| Dirección vigente | Agente independiente en notificación e interacción con externos; reportes al menos por Slack y correo; revisar bases y mejorar PVB |
+| Canales D0 | Slack y correo elegidos por el usuario; no implican adopción validada en el segmento |
+| Cuentas de prueba | El usuario confirmó que no están disponibles; falta configurarlas |
 
 Las publicaciones previas del PVB no representan aprobación de este PRD, de reposición como núcleo o de una arquitectura.
 
@@ -37,13 +40,17 @@ Las publicaciones previas del PVB no representan aprobación de este PRD, de rep
 
 **Opciones de captura a evaluar:** video fijo con cobertura útil; fotografías para presencia puntual; observación humana etiquetada para probar coordinación mientras se valida captura. Elegir material y comprobar condiciones de reutilización antes de usarlo. Para P1 documentar modelo de cámara/grabador y fuentes POS/stock.
 
-## Q-03 — Responsables, canal y autorizaciones
+## Q-03 — Cuentas, responsables y políticas de autonomía
 
-¿Quién configura, aprueba y ejecuta; qué canal e identidades se usarán?
+¿Qué cuentas, destinatarios e identidades se configurarán para Slack/correo y quién definirá las acciones, límites y escalamiento permitidos?
 
-[Answer]: Pendiente de nombres/roles y canal. No hay autorizaciones operativas externas registradas.
+[Answer]: Slack y correo están elegidos; el usuario confirmó que no hay cuentas de prueba disponibles. Siguen pendientes workspace/app Slack, proveedor/cuenta de correo, permisos de envío/recepción, destinatarios autorizados, asociación identidad–tienda–caso, roles, política versionada y ruta de escalamiento. No hay una configuración operativa autorizada ni cuentas conectadas por redactar el PRD.
 
-**Propuesta D0:** bandeja interna con identidades de prueba y tareas persistentes. Opciones P1: canal actual de la tienda o bandeja propia, con permisos y destinatarios explícitos. El selector de rol de una demo no equivale a autenticación real. Compras/precios requieren atribuciones separadas de administración técnica.
+**Requisito D0 revisado:** consulta Slack iniciada por el agente y respuesta que cambia la decisión; reporte real por Slack y correo; una consulta de correo a contacto de prueba con respuesta correlacionada que determina el siguiente paso, seguida de reporte separado. Se usan cuentas reales de prueba y destinatarios autorizados. Un webhook solo de salida no demuestra interacción. Una bandeja interna puede apoyar desarrollo, pero no acredita integración; sin cuentas y pruebas el prototipo permanece parcial.
+
+**Autonomía por concretar:** definir quién autoriza inicialmente consultas, avisos, reportes, tareas rutinarias, recordatorios y escalamiento; registrar condiciones, límites, vigencia y qué excepciones requieren decisión puntual. Las acciones cubiertas se ejecutan sin aprobación por mensaje. Compras/precios/compromisos comerciales reales quedan fuera de D0. El selector visual de rol, asunto de correo o texto recibido no sustituye verificar identidad, caso y facultades.
+
+**P1:** comprobar con la tienda si Slack/correo encajan con su operación y configurar sus responsables reales; la preferencia de demo no valida adopción comercial.
 
 ## Q-04 — Resultado y criterio de cierre
 
@@ -51,7 +58,7 @@ Las publicaciones previas del PVB no representan aprobación de este PRD, de rep
 
 [Answer]: Pendiente de línea base, plazo, criterio de éxito y aprobador comercial.
 
-**Opciones de resultado principal:** menor tiempo/carga de resolución; mejor ejecución de exhibición; resultado comercial de una promoción con evaluación adecuada. El borrador propone tiempo de resolución y alertas útiles para el ciclo A. Definir si cada cierre admite confirmación humana, requiere evidencia visual o ambas.
+**Opciones de resultado principal:** menor tiempo/carga de resolución; mejor ejecución de exhibición; resultado comercial de una promoción con evaluación adecuada. El borrador propone tiempo de resolución, carga de comunicaciones y autonomía operativa para el ciclo A. Medir acciones rutinarias resueltas correctamente sin intervención ad hoc / elegibles según política; incluir fallidas/pendientes al corte y no confundir respuesta del personal o ejecución física normal con supervisar al agente. Baseline y meta siguen pendientes. Definir si cada cierre admite confirmación humana, requiere evidencia visual o ambas.
 
 ## Q-05 — Entorno, tiempo y presupuesto
 
@@ -61,7 +68,7 @@ Las publicaciones previas del PVB no representan aprobación de este PRD, de rep
 
 **Propuestas de calidad:** acuse ≤2 s y respuesta/estado de espera del agente ≤15 s en 20 interacciones registradas, sujetas a revisión del equipo y entorno declarado. No son mediciones ni SLA. Las tolerancias visuales dependen del material y deben fijarse antes de la evaluación reservada.
 
-**Opciones de ejecución a comparar en diseño:** aplicación local; servicio alojado; procesamiento visual local con razonamiento remoto. La elección depende de acceso, observabilidad, costo y plazo. Para la hackathon confirmar el horario con organizadores; el plan 30/60/90 del PRD es otra escala.
+**Opciones de ejecución a comparar en diseño:** aplicación local; servicio alojado; procesamiento visual local con razonamiento remoto. La elección depende de acceso, observabilidad, costo y plazo. El [portal](https://medellin.aitinkerers.org/hackathons/h_kWaGpfQvrNc/) mostró entrega el 12 de septiembre de 2026 a las 16:30 UTC−5 durante esta revisión; comprobar avisos posteriores. El plan 30/60/90 del PRD es otra escala.
 
 ## Revisión
 

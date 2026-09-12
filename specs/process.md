@@ -57,3 +57,11 @@ La referencia metodológica es la copia clásica del curso, cuyo runbook declara
 El PRD alimenta un borrador de [requisitos](../aidlc-docs/inception/requirements/requirements.md), [personas](../aidlc-docs/inception/user-stories/personas.md) e [historias](../aidlc-docs/inception/user-stories/stories.md). La trazabilidad conecta necesidades, requisitos, escenarios y criterios de evaluación. Los comportamientos deben tener resultados verificables; los requisitos de calidad deben distinguir metas propuestas y mediciones realizadas.
 
 El [estado del proceso](../aidlc-docs/aidlc-state.md) identifica lo preparado y lo pendiente; la [auditoría](../aidlc-docs/audit.md) registra acciones y decisiones con su condición real. Estos archivos no declaran Inception completa. El diseño de aplicación, las unidades de trabajo y Construction requieren continuar el proceso sobre requisitos revisados. No se han aprobado arquitectura, implementación, despliegue ni comunicaciones externas mediante la elaboración de este PRD.
+
+## Revisión de visión v0.2
+
+El usuario pidió mayor independencia en notificación e interacción y reportes por Slack y correo, además de contrastar las bases del concurso. Confirmó que aún no dispone de cuentas de prueba. El [PVB v0.2](../docs/02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md) explicita las nueve dimensiones de la plantilla de visión de HardcoreAI y añade alcance de demo, información, evaluación del concurso y decisiones. Se conserva v0.1 como antecedente.
+
+Se vuelve sobre conflictos y requisitos: canales reales pasan a D0 y una política previa permite comunicaciones rutinarias sin aprobación individual. Requisitos, historias y preguntas se ajustan juntos para no conservar la prohibición anterior. Esta dirección de producto es una instrucción confirmada; cuentas, destinatarios, políticas concretas e implementación permanecen pendientes.
+
+Las [bases y documentación técnica](../docs/research/02_Bases_y_Estrategia_PanelaTeam_v0.2.md) fueron consultadas para esta revisión. Se entregan [misiones de validación y crítica para Perplexity](../docs/research/03_Perplexity_Misiones_PanelaTeam_v0.2.md), sin ejecutarlas ni declarar completado el deep research del curso. La revisión documental no inicia envíos externos ni Construction.
