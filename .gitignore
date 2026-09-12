@@ -5,3 +5,6 @@
 data/private/
 media/private/
 .impeccable/
+node_modules/
+dist/
+*.log

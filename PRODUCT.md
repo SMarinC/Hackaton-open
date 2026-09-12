@@ -8,19 +8,21 @@ web
 
 ## Stack
 
-Static HTML/CSS/JS. Decidido para el reporte/panel del demo dado el límite de ~3 horas de hackathon: cero setup, cero build, se abre directo en el navegador.
+Server + static frontend in JS/Node (src/, server/, vite.config.js — see package.json) for the video/vision/case pipeline. The demo report panel (demo/panel.html) stays static HTML/CSS/JS: zero setup, zero build, opens directly in the browser given the ~3h hackathon budget.
 
 ## Users
 
-- **Encargado de tienda** (usuario principal del demo): atiende excepciones, revisa el resumen/reporte del caso, y configura o acepta las reglas de operación (la "política").
+- **Encargado de tienda** (usuario principal del demo): revisa una señal temporal, entiende su evidencia, revisa el resumen/reporte del caso, y configura o acepta las reglas de operación (la "política"). Fuente: PRD §§3, 6, 7.
+- **Administrador**: conecta fuentes, identidades y canales; coordina una gestión con responsables; no obtiene por ello facultades comerciales.
 - **Responsable de reposición**: recibe la tarea vía Slack, responde sobre disponibilidad, reporta ejecución o bloqueo.
 - **Compras / proveedor autorizado** (contacto externo, representado por una cuenta de prueba en el demo): responde disponibilidad o fecha de entrega por correo; una consulta no constituye un pedido.
 - **Propietario / operaciones**: decide contratar según reducción de coordinación, costo y utilidad comprobada. Posible veto de confianza sobre el acceso a cámaras/datos.
-- **Administrador**: conecta fuentes, identidades y canales; no obtiene por ello facultades comerciales.
 
 ## Product Purpose
 
-PanelaTeam es un agente que detecta posibles faltantes en la exhibición de una tienda de abarrotes con secciones diferenciadas, y en lugar de solo avisar, **conduce la coordinación completa** con las personas responsables por Slack y correo reales: consulta inventario, abre el hilo con el responsable, espera y procesa su respuesta, escala o pregunta a un tercero (compras/proveedor) cuando falta mercancía, registra la tarea, verifica la ejecución con evidencia y cierra el caso reportando en ambos canales.
+PanelaTeam convierte actividad observable en video en eventos y casos trazables, y en lugar de solo avisar, **conduce la coordinación completa** con las personas responsables por Slack y correo reales: consulta inventario, abre el hilo con el responsable, espera y procesa su respuesta, escala o pregunta a un tercero (compras/proveedor) cuando falta mercancía, registra la tarea, verifica la ejecución con evidencia y cierra el caso reportando en ambos canales.
+
+El video, las zonas y la permanencia son el recorrido principal de esta primera unidad; Slack y correo siguen siendo **obligatorios** para aceptar D0 completo — el primer incremento puede demostrar el flujo local sin presentar canales pendientes como conectados.
 
 El trabajo que reduce es **perseguir información y conducir cada transición entre personas y sistemas** — no reemplaza el trabajo físico de reposición ni las decisiones que exceden sus facultades (comprar, cambiar precio, aprobar promociones).
 
@@ -36,7 +38,7 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 - Segmento: tiendas de abarrotes con secciones diferenciadas. Piloto propuesto (no confirmado): una tienda con exhibición observable, encargado identificable, inventario consultable y responsable de reposición disponible.
 - Canales de coordinación **obligatorios para el demo (D0)**: Slack (hilo por caso, conversación operativa principal) y correo (contacto externo representado por cuenta de prueba). Una bandeja simulada no satisface el requisito D0.
-- Evidencia de entrada: video/cámara con procedencia declarada (clip de internet con condiciones de reutilización verificadas para el demo; sin reconocimiento facial, solo IDs temporales de seguimiento).
+- Evidencia de entrada: video/cámara con procedencia declarada (clip de internet con condiciones de reutilización verificadas para el demo; sin reconocimiento facial, solo IDs temporales de seguimiento). El pipeline de video/tracking/vision ya tiene un primer incremento en código (src/vision.js, src/tracker.js, tests/).
 - Datos comerciales: POS, inventario y catálogo — fixtures ficticios para el demo, etiquetados como tales en cualquier reporte.
 - Política configurable: tienda, identidad, acciones admitidas, contactos, información compartible, límites, horario, recordatorios, escalamiento, vigencia y versión.
 - Ciclo de estados del caso: `detectado → en validación → propuesta → aprobado → asignado → ejecución reportada → verificado` (también `descartado`, `bloqueado`, `cancelado`, con motivo).
@@ -48,15 +50,15 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 **Autonomía del agente dentro de la política:** puede consultar datos autorizados, pedir confirmación/evidencia, notificar, recordar, escalar, entregar reportes, y asignar reposición interna automáticamente cuando la regla vigente cubre rol/producto/zona/cantidad/stock/condiciones. Fuera de eso, pide una decisión puntual. Nunca infiere autorización nueva de un correo/mensaje entrante; ampliar destinatarios o permisos requiere a una persona facultada.
 
-**Explícitamente fuera de alcance D0:** comprar, aceptar cotización, pagar, o cambiar precio/promoción; detector de visión automático validado (el demo puede usar anotación humana, declarada como tal, en vez de detección real); métricas de permanencia y rankings comerciales; cámaras/POS reales, más de una tienda, o evaluación causal de promociones (todo esto es piloto/evolución posterior, no D0).
+**Explícitamente fuera de alcance D0:** comprar, aceptar cotización, pagar, o cambiar precio/promoción; detector de visión automático validado como exactitud comercial (el puntaje del detector no se presenta como exactitud validada); métricas de permanencia y rankings comerciales; cámaras/POS reales, más de una tienda, o evaluación causal de promociones (todo esto es piloto/evolución posterior, no D0).
 
 **Terminología del proyecto:** PVB = Product Vision Board; D0 = alcance obligatorio de la demo; "caso" = unidad de trabajo que agrupa evento, consultas, decisión y cierre; "política" = reglas de autonomía configuradas; "procedencia" = si un dato es captura real, reproducción de archivo, dato sintético o anotación humana.
 
-**Pendiente/no decidido (no inventar):** primer ciclo definitivo (reposición es el candidato, no confirmado por el equipo), clip de video concreto, cuentas de prueba de Slack/correo (aún no existen), tienda piloto, presupuesto, y stack/infraestructura del agente en sí (fuera del panel de reporte).
+**Pendiente/no decidido (no inventar):** primer ciclo definitivo (reposición es el candidato, no confirmado por el equipo), clip de video concreto, cuentas de prueba de Slack/correo (aún no existen), tienda piloto, presupuesto.
 
 ## Brand Commitments
 
-Nombre de equipo: **PanelaTeam** (nombre comercial del producto todavía pendiente). Foto del equipo en `assets/panelateam-medellin.png`, con procedencia documentada en `assets/README.md`. Sin guía de marca, paleta o tipografía confirmada todavía.
+Nombre de equipo: **PanelaTeam** — identidad confirmada (nombre comercial del producto todavía pendiente). Foto del equipo en `assets/panelateam-medellin.png`, con procedencia documentada en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. Sin guía de marca, paleta o tipografía comercial aprobada todavía.
 
 ## Evidence on Hand
 
@@ -73,7 +75,9 @@ Nombre de equipo: **PanelaTeam** (nombre comercial del producto todavía pendien
 3. **Procedencia declarada en cada dato y cada reporte.** Real, fixture o anotación humana — nunca mezclados sin etiqueta, ni en el demo ni en el panel.
 4. **El agente actúa dentro de una política explícita, nunca por inferencia de un mensaje entrante.** Ampliar permisos o destinatarios es un cambio de configuración humano, no una conclusión del agente.
 5. **Reportar solo a quien corresponde.** Reporte operativo a personal, resumen a encargado, consulta mínima a tercero — no distribuir todo a todos.
+6. **No presentar simulación como realidad, stock como inferencia visual, ni notificación como resolución.** Los datos y estados sirven a decisiones, no a aparentar validación comercial (PRD §§6, 8, 9).
+7. **El video y su evidencia temporal preceden a los indicadores agregados.** Cada gestión conserva fuente, motivo, estado y próximo paso; la falta de conexión se muestra explícitamente; el operador puede pausar y revisar sin perder el caso.
 
 ## Accessibility & Inclusion
 
-No se estableció un requisito específico todavía; el panel del demo debe cumplir como mínimo contraste y semántica básica dado el tiempo disponible, sin auditoría formal en esta pasada.
+PRD NFR-07: recorrido operable con teclado, controles con nombre, foco visible, etiquetas y errores en texto. El color acompaña información textual, nunca la reemplaza. Respetar preferencia de movimiento reducido (`prefers-reduced-motion`). No se declara certificación de accesibilidad.
