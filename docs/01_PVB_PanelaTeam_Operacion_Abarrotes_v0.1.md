@@ -1,5 +1,7 @@
 # PanelaTeam — PVB de operación para tiendas de abarrotes
 
+> **Nota de identidad — 2026-09-12:** la solución se llama **Panela Stocks** y el equipo es **PanelaTeam**. Este PVB v0.1 se conserva como antecedente: las menciones de PanelaTeam al producto reflejan la denominación usada al redactarlo. Véase el [PVB vigente](02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md).
+
 Versión 0.1 · 12 de septiembre de 2026 · Documento de diseño para discusión del equipo.
 
 Repositorio del equipo: [SMarinC/Hackaton-open](https://github.com/SMarinC/Hackaton-open).

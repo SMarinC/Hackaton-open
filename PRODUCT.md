@@ -24,7 +24,7 @@ Frontend funcional en JavaScript/Vite y backend Node.js con SQLite (`src/`, `ser
 
 ## Product Purpose
 
-El propósito de PanelaTeam es convertir actividad observable en video en eventos y casos trazables, y **conducir la coordinación completa** con las personas responsables por Slack y correo reales: consultar inventario, abrir el hilo con el responsable, esperar y procesar su respuesta, escalar o preguntar a un tercero (compras/proveedor) cuando falta mercancía, registrar la tarea, verificar la ejecución con evidencia y cerrar el caso reportando en ambos canales. Este recorrido completo sigue siendo el objetivo de D0, no una capacidad ya demostrada.
+El propósito de Panela Stocks es convertir actividad observable en video en eventos y casos trazables, y **conducir la coordinación completa** con las personas responsables por Slack y correo reales: consultar inventario, abrir el hilo con el responsable, esperar y procesar su respuesta, escalar o preguntar a un tercero (compras/proveedor) cuando falta mercancía, registrar la tarea, verificar la ejecución con evidencia y cerrar el caso reportando en ambos canales. Este recorrido completo sigue siendo el objetivo de D0, no una capacidad ya demostrada.
 
 El video, las zonas y la permanencia son el recorrido principal de esta primera unidad; Slack y correo siguen siendo **obligatorios** para aceptar D0 completo — el primer incremento puede demostrar el flujo local sin presentar canales pendientes como conectados.
 
@@ -65,7 +65,7 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 ## Brand Commitments
 
-Nombre de equipo: **PanelaTeam** — identidad confirmada (nombre comercial del producto todavía pendiente). `assets/panelateam-medellin.png` es una ilustración generada para la identidad de la hackathon, no una fotografía de integrantes; su procedencia está en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. Para regenerar la demo funcional se adopta la última versión de `DESIGN.md`, «La mesa de operación», como dirección de prototipo: papel cálido, tinta café, dos columnas y fuentes de sistema sin Google Fonts. Esto no acredita una identidad comercial completa aprobada.
+Nombre de la solución: **Panela Stocks**. Nombre del equipo: **PanelaTeam**. Ambos nombres están confirmados por el usuario. Usar «Panela Stocks» para el producto y «PanelaTeam» para su equipo desarrollador; conservar esta distinción en títulos, descripciones y materiales de presentación. `assets/panelateam-medellin.png` es una ilustración generada para la identidad de la hackathon, no una fotografía de integrantes; su procedencia está en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. Para regenerar la demo funcional se adopta la última versión de `DESIGN.md`, «La mesa de operación», como dirección de prototipo: papel cálido, tinta café, dos columnas y fuentes de sistema sin Google Fonts. Esto no acredita una identidad comercial completa aprobada.
 
 ## Evidence on Hand
 

@@ -1,10 +1,10 @@
-# PanelaTeam — PVB de operación autónoma para abarrotes
+# Panela Stocks — PVB de operación autónoma para abarrotes
 
 **Product Vision Board · v0.2 · 12 de septiembre de 2026 · Borrador de producto para revisión**
 
 **Promesa:** un agente observa situaciones de una tienda, abre gestiones con evidencia y las lleva adelante con sus responsables por Slack y correo: consulta, coordina, recuerda, escala y reporta hasta conocer el resultado.
 
-PanelaTeam es el equipo; nombre comercial pendiente. Esta versión reemplaza la visión operativa vigente de [v0.1](01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md), que se conserva como antecedente. El [PRD](../specs/prd.md) mantiene los requisitos verificables; [método](../specs/process.md), [revisión del concurso](research/02_Bases_y_Estrategia_PanelaTeam_v0.2.md) y [misiones para Perplexity](research/03_Perplexity_Misiones_PanelaTeam_v0.2.md) acompañan la decisión. No hay aplicación ni canales conectados todavía.
+**Panela Stocks** es el nombre confirmado de la solución; **PanelaTeam** es el equipo desarrollador. Esta versión reemplaza la visión operativa vigente de [v0.1](01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md), que se conserva como antecedente. El [PRD](../specs/prd.md) mantiene los requisitos verificables; [método](../specs/process.md), [revisión del concurso](research/02_Bases_y_Estrategia_PanelaTeam_v0.2.md) y [misiones para Perplexity](research/03_Perplexity_Misiones_PanelaTeam_v0.2.md) acompañan la decisión. No hay aplicación ni canales conectados todavía.
 
 ## Qué cambia y qué está confirmado
 

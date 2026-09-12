@@ -1,4 +1,4 @@
-# Índice de requisitos — PanelaTeam
+# Índice de requisitos — Panela Stocks
 
 **Inception documental · Borrador v0.2 · Validación y aprobación pendientes**
 

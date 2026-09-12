@@ -1,5 +1,7 @@
 # Bases y decisiones para PanelaTeam v0.2
 
+> **Nota de identidad — 2026-09-12:** **PanelaTeam** es el equipo; su solución se llama **Panela Stocks**. El análisis siguiente conserva el contenido y el estado registrados en su fecha de revisión.
+
 **Revisión: 12 de septiembre de 2026, 17:06 UTC · Estado: análisis y recomendaciones; producto aún no implementado.**
 
 ## Fuentes del concurso y alcance de la comprobación

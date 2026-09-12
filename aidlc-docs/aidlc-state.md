@@ -1,4 +1,6 @@
-# Estado AI-DLC — PanelaTeam
+# Estado AI-DLC — Panela Stocks
+
+**Identidad confirmada el 2026-09-12:** solución **Panela Stocks**, desarrollada por el equipo **PanelaTeam**. Esta actualización de nombre no cambia el alcance ni acredita capacidades adicionales.
 
 **Estado vigente posterior:** el usuario autorizó iniciar código orientado a video y revisar el cambio remoto `613ce94`. Se construyó [U01 — Video y casos](construction/U01-video-operations.md), con aplicación ejecutable, 38 pruebas automatizadas y build local correcto. Slack/correo siguen obligatorios: adaptadores de salida preparados, cuentas y recepción real pendientes; no se acepta D0 completo. No se registra aprobación global del PRD ni gates formales inexistentes.
 

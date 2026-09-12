@@ -1,4 +1,6 @@
-# PanelaTeam — resumen del PVB v0.2
+# Panela Stocks — resumen del PVB v0.2
+
+**Solución:** Panela Stocks · **Equipo:** PanelaTeam.
 
 **Product Vision Board · Borrador vigente: operación autónoma de tiendas de abarrotes.**
 
@@ -18,7 +20,7 @@ La reposición es candidata, aún pendiente de selección del equipo. Se conserv
 
 ## Confirmado y pendiente
 
-Confirmados: PanelaTeam, tiendas de abarrotes con secciones diferenciadas, material visual de internet y necesidad de independencia con Slack/correo. El usuario confirmó que **todavía no hay cuentas de prueba disponibles**. Faltan video, primer escenario, cuentas/contactos, política, stack, equipo, presupuesto y criterios del piloto.
+Confirmados: equipo PanelaTeam, solución Panela Stocks, tiendas de abarrotes con secciones diferenciadas, material visual de internet y necesidad de independencia con Slack/correo. El usuario confirmó que **todavía no hay cuentas de prueba disponibles**. Faltan video, primer escenario, cuentas/contactos, política, stack, equipo, presupuesto y criterios del piloto.
 
 No hay implementación, conexiones o resultados de desempeño acreditados. Las fuentes conservan procedencia: video/replay/anotación, datos comerciales ficticios o reales. Cámara no prueba venta ni existencias en bodega; permanencia necesita seguimiento; una promoción requiere datos comerciales y evaluación adecuada.
 

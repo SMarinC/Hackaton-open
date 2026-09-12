@@ -1,4 +1,4 @@
-# Personas — PanelaTeam
+# Personas — Panela Stocks
 
 **Versión:** 0.2 · **Fecha:** 2026-09-12 · **Estado:** borrador de Inception para revisión.
 

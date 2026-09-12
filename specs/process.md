@@ -1,16 +1,16 @@
 # Método y estado de elaboración del PRD
 
-**Producto:** PanelaTeam · **Fecha:** 2026-09-12 · **Estado:** PRD en revisión; primera unidad de Construction autorizada posteriormente.
+**Producto:** Panela Stocks · **Equipo:** PanelaTeam · **Fecha:** 2026-09-12 · **Estado:** PRD en revisión; primera unidad de Construction autorizada posteriormente.
 
 **Actualización de alcance:** después del PRD, el usuario pidió priorizar el video de referencia y «ejecutar ya el inicio de code», y revisar el cambio remoto `613ce94`. Esa instrucción autoriza construir U01 y registrar decisiones/validaciones sin exigir otra aprobación para empezar. Las referencias históricas siguientes a Construction pendiente describen la elaboración inicial; no invalidan esta autorización posterior. No se inventan aprobaciones globales del PRD ni gates del curso. Véase [estado vigente](../aidlc-docs/aidlc-state.md).
 
 ## Propósito y fuentes
 
-Este documento explica cómo se transforma la visión de PanelaTeam en un PRD trazable y cómo se prepara su continuidad en AI-DLC. El alcance actual es especificar el producto; la aprobación del contenido y el inicio de Construction siguen pendientes. Ningún artefacto se presenta como implementación, evidencia de resultados comerciales o certificación del framework.
+Este documento explica cómo se transforma la visión de Panela Stocks en un PRD trazable y cómo se prepara su continuidad en AI-DLC. El alcance actual es especificar el producto; la aprobación del contenido y el inicio de Construction siguen pendientes. Ningún artefacto se presenta como implementación, evidencia de resultados comerciales o certificación del framework.
 
 En HardcoreAI, **PVB significa Product Vision Board**. El PVB existente conserva la visión comercial y el alcance propuesto para tiendas de abarrotes con secciones diferenciadas. La expresión previa «producto mínimo para validar valor de negocio» describe una intención de validación, pero no sustituye el nombre del artefacto del curso.
 
-Se consultaron materiales de HardcoreAI, Cohorte 2. El siguiente inventario identifica rutas relativas dentro de esa copia de referencia; esos archivos no se distribuyen en este repositorio. Los ejemplos de otros productos no aportan requisitos, métricas ni decisiones para PanelaTeam.
+Se consultaron materiales de HardcoreAI, Cohorte 2. El siguiente inventario identifica rutas relativas dentro de esa copia de referencia; esos archivos no se distribuyen en este repositorio. Los ejemplos de otros productos no aportan requisitos, métricas ni decisiones para Panela Stocks.
 
 | Referencia consultada | Parte utilizada | SHA-256 de la copia consultada |
 |---|---|---|
@@ -24,7 +24,7 @@ El archivo `Estacion-4/aidlc-rules/VERSION` declara `0.1.8`. Los hashes identifi
 
 ## Transformación de PVB a PRD
 
-Antes de redactar los requisitos se contrastan los documentos del producto y las decisiones de la conversación. El análisis previo distingue contradicciones, diferencias de alcance y vacíos de información. Para PanelaTeam esto exige separar la visión de conexión a cámaras reales del material de internet previsto para la demo, y distinguir observaciones visuales, registros comerciales y confirmaciones humanas.
+Antes de redactar los requisitos se contrastan los documentos del producto y las decisiones de la conversación. El análisis previo distingue contradicciones, diferencias de alcance y vacíos de información. Para Panela Stocks esto exige separar la visión de conexión a cámaras reales del material de internet previsto para la demo, y distinguir observaciones visuales, registros comerciales y confirmaciones humanas.
 
 Cada decisión se identifica como confirmada, propuesta o pendiente. Cuando falta evidencia se registra el vacío y una forma de resolverlo. Las metas propuestas no se convierten en resultados observados; una simulación de inventario tampoco demuestra integración con una tienda. Los conflictos y sus resoluciones propuestas quedan visibles en el [PRD](prd.md).
 
