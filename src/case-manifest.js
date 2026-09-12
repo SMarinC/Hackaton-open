@@ -191,6 +191,37 @@ function renderSpine(item, timeline) {
     .join("")}</ol>`;
 }
 
+function renderActualPath(item, timeline) {
+  const states = {
+    person_dwell_detected: ["review_required", "Revisión"],
+    stock_confirmed: ["assigned", "Reposición asignada"],
+    no_stock: ["awaiting_delivery", "Consulta de entrega"],
+    restocked: ["closed", "Cierre humano"],
+    no_issue: ["discarded", "Descartado"],
+  };
+  const entries = timeline
+    .map((entry, index) => ({ ...entry, index }))
+    .filter(
+      (entry) =>
+        states[entry.type] &&
+        (entry.type === "person_dwell_detected" ||
+          entry.source === "local_operator"),
+    )
+    .sort(
+      (a, b) =>
+        (instant(a.at) ?? Infinity) - (instant(b.at) ?? Infinity) ||
+        a.index - b.index,
+    );
+  const history = [];
+  for (const entry of entries) {
+    const [state, label] = states[entry.type];
+    if (history.at(-1)?.state !== state) history.push({ state, label });
+  }
+  if (!history.length)
+    return '<p class="path-note">Historial de estados no disponible. Se muestra el estado conservado del caso.</p>';
+  return `<ol class="state-path" aria-label="Recorrido registrado del caso">${history.map(({ state, label }, index) => `<li data-case-state="${state}"${index === history.length - 1 && state === item.status ? ' aria-current="step"' : ""}>${label}</li>`).join("")}</ol>`;
+}
+
 function renderProvenance(item) {
   const source = object(item.source);
   const inventory = object(item.inventory);
@@ -385,8 +416,9 @@ export function renderCase(value, outbox = []) {
     <header class="case-head"><div class="case-subject"><h3><span class="case-number">${escape(displayId)}</span> ${escape(title)}</h3></div>
       <div class="case-status ${terminal ? "stamp-terminal" : "stamp-progreso"}">${mark(stamp, "stamp-icon")}<span>${escape(statusLabel(item.status))}${item.status === "closed" ? "<small>Sin verificación visual posterior</small>" : ""}</span></div>
     </header>
-    ${renderSpine(item, timeline)}
+    ${renderActualPath(item, timeline)}
     ${renderProvenance(item)}
+    <details class="vision-cycle"><summary>Ciclo objetivo del PVB</summary><p class="evidence-note">Modelo de siete etapas previsto. Las etapas sin registro no están demostradas por este caso; no representan el ciclo implementado completo.</p>${renderSpine(item, timeline)}</details>
     ${renderManifest(item, timeline, messages)}
     ${renderReports(item, messages)}
     ${renderObservation(item)}

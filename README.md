@@ -4,7 +4,7 @@
 
 Proyecto de PanelaTeam para **Agents, Everywhere**, AI Tinkerers Medellín, septiembre de 2026.
 
-**Estado: demo funcional de video con manifiestos de operación.** Detector local, seguimiento por zonas, permanencia, eventos y casos persistentes. Slack y correo siguen siendo obligatorios para la demo completa; este incremento tiene adaptadores salientes sin conectar y no implementa todavía respuestas entrantes.
+**Estado: demo funcional de video con una mesa de operación y casos trazables.** Detector local, seguimiento por zonas, permanencia, eventos y casos persistentes. Slack y correo siguen siendo obligatorios para la demo completa; este incremento tiene adaptadores salientes sin conectar y no implementa todavía respuestas entrantes.
 
 ## Ejecutar ahora
 
@@ -19,7 +19,7 @@ Abre [PanelaTeam local](http://127.0.0.1:5173). Pulsa **Analizar video**. La ref
 
 1. Observa cajas, recorridos e IDs temporales sobre el video.
 2. El umbral inicial de ocho segundos abre una revisión de sección. Es configuración exploratoria, no un umbral validado con tiendas.
-3. Abre **Casos** y selecciona un expediente. Su hoja reúne la evidencia, las observaciones locales y los mensajes de Slack/correo en orden cronológico. Las siete etapas muestran únicamente el avance con registro; las demás siguen pendientes. En **Registrar observación local**, confirma una situación con nota para recorrer las ramas con stock, sin stock o sin incidencia.
+3. Abre **Casos** y selecciona un expediente. Su hoja reúne la evidencia, las observaciones locales y los mensajes de Slack/correo en orden cronológico. El recorrido principal muestra las transiciones registradas del backend; el ciclo objetivo de siete etapas del PVB se consulta por separado. En **Registrar observación local**, confirma una situación con nota para recorrer las ramas con stock, sin stock o sin incidencia.
 4. Una reposición solo se cierra después de asignarse y recibir confirmación explícita. El cierre es humano local, no verificación visual ni mensaje externo.
 5. **Revisar instante en el video** pausa la fuente actual en el tiempo registrado cuando corresponde al mismo video; no ejecuta una verificación nueva. Exporta el registro JSON. Pausar, buscar otra posición o cambiar zonas no debe inflar la permanencia. Cambiar fuente, zonas o umbral inicia una nueva ejecución temporal.
 
@@ -33,7 +33,7 @@ npm start
 
 El build se sirve en [localhost:8787](http://127.0.0.1:8787). La base SQLite vive en `data/private/panela.sqlite`, excluida de Git. `.env.example` describe la configuración opcional; no se necesitan credenciales para la visión y el recorrido local. [Contrato del backend y límites de los conectores](server/README.md).
 
-La interfaz adopta [PRODUCT.md](PRODUCT.md) y [DESIGN.md](DESIGN.md): una columna de 760 px, hojas de papel kraft, tipografía IBM Plex y un registro continuo por caso. El panel de [referencia estática](demo/panel.html) contiene casos ficticios; la app ejecutable presenta los casos de SQLite. Las consultas preparadas, la aceptación de una API y la entrega confirmada son estados distintos.
+La interfaz adopta [PRODUCT.md](PRODUCT.md) y [DESIGN.md](DESIGN.md) actualizados por el equipo en `b8e4071`: video y casos simultáneos, paleta cálida OKLCH y tipografía de sistema. El registro de cada caso conserva cronología y procedencia. En pantallas pequeñas la mesa se apila para mantener controles legibles. El panel de [ejemplos estáticos](demo/panel.html) contiene casos ficticios y se incluye en el build; la app ejecutable presenta los casos de SQLite. Las consultas preparadas, la aceptación de una API y la entrega confirmada son estados distintos.
 
 ## Qué está implementado
 

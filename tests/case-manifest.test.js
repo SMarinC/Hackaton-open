@@ -410,3 +410,61 @@ test("compact manifest keeps status readable, discloses message bodies and retai
     /<td class="col-entry"><strong>Consulta de revisión<\/strong><span class="entry-state">Pendiente de conexión<\/span>/,
   );
 });
+
+test("real state path uses recorded transitions and does not invent a task in the no-stock branch", (t) => {
+  const store = createStore({
+    filename: ":memory:",
+    now: () => "2026-09-12T16:00:00Z",
+  });
+  t.after(() => store.close());
+  const item = store.ingest(source).case;
+  const pending = store.observe(item.id, {
+    request_id: "no-stock-path",
+    expected_version: item.version,
+    kind: "no_stock",
+    shelf_issue_confirmed: true,
+    note: "Fixture: no hay stock.",
+  }).case;
+  assert.equal(pending.task, null);
+  const html = renderCase(pending, store.listOutbox());
+  const path = html.match(/<ol class="state-path"[\s\S]*?<\/ol>/)[0];
+  assert.deepEqual(
+    [...path.matchAll(/data-case-state="([^"]+)"/g)].map((m) => m[1]),
+    ["review_required", "awaiting_delivery"],
+  );
+  assert.doesNotMatch(path, /assigned|closed|verified/);
+  assert.match(
+    html,
+    /<details class="vision-cycle"><summary>Ciclo objetivo del PVB/,
+  );
+});
+
+test("real state path preserves a return from supplier query to assigned before closure", (t) => {
+  const store = createStore({
+    filename: ":memory:",
+    now: () => "2026-09-12T16:00:00Z",
+  });
+  t.after(() => store.close());
+  let item = store.ingest(source).case;
+  for (const [index, kind] of [
+    "stock_confirmed",
+    "no_stock",
+    "stock_confirmed",
+    "restocked",
+  ].entries()) {
+    item = store.observe(item.id, {
+      request_id: `path-${index}`,
+      expected_version: item.version,
+      kind,
+      shelf_issue_confirmed: true,
+      note: "Fixture de transición local.",
+    }).case;
+  }
+  const html = renderCase(item, store.listOutbox());
+  const path = html.match(/<ol class="state-path"[\s\S]*?<\/ol>/)[0];
+  assert.deepEqual(
+    [...path.matchAll(/data-case-state="([^"]+)"/g)].map((m) => m[1]),
+    ["review_required", "assigned", "awaiting_delivery", "assigned", "closed"],
+  );
+  assert.match(path, /data-case-state="closed" aria-current="step"/);
+});

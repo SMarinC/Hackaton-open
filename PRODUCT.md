@@ -12,7 +12,7 @@ web
 
 ## Stack
 
-Frontend funcional en JavaScript/Vite y backend Node.js con SQLite (`src/`, `server/`, `vite.config.js`; ver `package.json`) para el recorrido video → visión → evento → caso persistente. La app adopta la dirección «manifiesto de bodega» de `DESIGN.md`, conservando sus controles operativos. `demo/panel.html` es la referencia visual estática; abrirla no ejecuta el pipeline ni conecta canales. La app funcional requiere el entorno de ejecución y build descrito en `README.md`.
+Frontend funcional en JavaScript/Vite y backend Node.js con SQLite (`src/`, `server/`, `vite.config.js`; ver `package.json`). **`index.html` + `src/main.js` es la interfaz operativa** del recorrido video → detección COCO-SSD → zonas → eventos → casos persistentes → outbox Slack/correo. Adopta la última dirección de `DESIGN.md`, «La mesa de operación»: dos columnas de trabajo para video y casos, con cronología de los casos del backend y tipografía de sistema sin cargar webfonts. `demo/panel.html` es una superficie secundaria estática con ejemplos ficticios; no consume los casos de la API ni acredita comunicaciones o ejecuciones reales. La app funcional requiere el entorno de ejecución y build descrito en `README.md`.
 
 ## Users
 
@@ -47,7 +47,8 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 - Evidencia de entrada: grabación histórica elegida por el usuario, referenciada en YouTube y reproducible desde Commons mediante `public/media-manifest.json`. Muestra una tienda de productos para el hogar, no una tienda piloto de abarrotes ni una cámara propia en vivo. La ficha declara `PD-automated`; se conserva esa declaración sin presentarla como autorización confirmada del titular. El pipeline usa IDs temporales sin reconocimiento facial (`src/vision.js`, `src/tracker.js`, `tests/`).
 - Datos comerciales: POS, inventario y catálogo — fixtures ficticios para el demo, etiquetados como tales en cualquier reporte.
 - Política configurable objetivo: tienda, identidad, acciones admitidas, contactos, información compartible, límites, horario, recordatorios, escalamiento, vigencia y versión. El incremento actual aplica reglas de estado y controles de envío/destinatarios; no implementa todavía toda esa configuración operacional.
-- Ciclo objetivo de siete etapas: `detectado → en validación → propuesta → aprobado → asignado → ejecución reportada → verificado` (también `descartado`, `bloqueado`, `cancelado`, con motivo). El backend actual usa `review_required`, `assigned`, `awaiting_delivery`, `closed` y `discarded`; no implementa propuesta, aprobación y verificación visual como etapas distintas. El diseño no debe mostrar las siete etapas como cumplidas por un cierre local.
+- **Ciclo implementado (`server/store.js`):** el evento abre `review_required`. Con incidencia en exhibición confirmada, `stock_confirmed` crea una tarea y pasa a `assigned`; `restocked` con nota solo permite cerrar desde `assigned`. `no_stock` pasa a `awaiting_delivery` y prepara la consulta por correo: si viene de revisión, `task` permanece `null`; solo una tarea ya existente pasa a `blocked_no_stock`. Desde `awaiting_delivery` no hay cierre directo por `restocked`: se requiere una nueva confirmación de stock para volver a `assigned`. `no_issue` descarta un caso no terminal. Las respuestas entrantes y la recepción de una fecha todavía no ejecutan transiciones.
+- **Ciclo objetivo de siete etapas PVB (aspiracional):** `detectado → en validación → propuesta → aprobado → asignado → ejecución reportada → verificado` (también `descartado`, `bloqueado`, `cancelado`, con motivo). El backend no implementa propuesta, aprobación y verificación visual como etapas distintas. El diseño no debe mostrar las siete etapas como cumplidas por un cierre local.
 - Concurso: AI Tinkerers Medellín, "Agents, Everywhere" — entrega requiere repositorio público, video de dos minutos y demás materiales del handbook. Candidatura aún no enviada.
 
 ## Capabilities and Constraints
@@ -60,11 +61,11 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 **Terminología del proyecto:** PVB = Product Vision Board; D0 = alcance obligatorio de la demo; "caso" = unidad de trabajo que agrupa evento, consultas, decisión y cierre; "política" = reglas de autonomía configuradas; "procedencia" = si un dato es captura real, reproducción de archivo, dato sintético o anotación humana.
 
-**Pendiente/no decidido (no inventar):** validación del ciclo de reposición con una tienda real, cuentas de prueba de Slack/correo y sus conexiones, tienda piloto y presupuesto. El video de referencia y el recorrido local de revisión por permanencia ya están elegidos.
+**Pendiente/no decidido (no inventar):** reconciliar el ciclo implementado con el vocabulario PVB, evaluación anotada reservada del detector (FR-01/02/03/04), directorio real de responsables (FR-06/07/09), validación del ciclo de reposición con una tienda real, cuentas de prueba de Slack/correo y sus conexiones (U02), tienda piloto y presupuesto. El video de referencia y el recorrido local de revisión por permanencia ya están elegidos. Evidencia de implementación parcial: `aidlc-docs/construction/U01-video-operations.md`.
 
 ## Brand Commitments
 
-Nombre de equipo: **PanelaTeam** — identidad confirmada (nombre comercial del producto todavía pendiente). `assets/panelateam-medellin.png` es una ilustración generada para la identidad de la hackathon, no una fotografía de integrantes; su procedencia está en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. El usuario adoptó `DESIGN.md` y su dirección «manifiesto de bodega» para la demo funcional, con paleta y tipografía de prototipo. Esto no acredita una identidad comercial completa aprobada.
+Nombre de equipo: **PanelaTeam** — identidad confirmada (nombre comercial del producto todavía pendiente). `assets/panelateam-medellin.png` es una ilustración generada para la identidad de la hackathon, no una fotografía de integrantes; su procedencia está en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. Para regenerar la demo funcional se adopta la última versión de `DESIGN.md`, «La mesa de operación», como dirección de prototipo: papel cálido, tinta café, dos columnas y fuentes de sistema sin Google Fonts. Esto no acredita una identidad comercial completa aprobada.
 
 ## Evidence on Hand
 

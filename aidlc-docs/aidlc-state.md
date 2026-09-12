@@ -2,7 +2,7 @@
 
 **Estado vigente posterior:** el usuario autorizó iniciar código orientado a video y revisar el cambio remoto `613ce94`. Se construyó [U01 — Video y casos](construction/U01-video-operations.md), con aplicación ejecutable, 38 pruebas automatizadas y build local correcto. Slack/correo siguen obligatorios: adaptadores de salida preparados, cuentas y recepción real pendientes; no se acepta D0 completo. No se registra aprobación global del PRD ni gates formales inexistentes.
 
-**Actualización de interfaz:** se incorporó el merge `3032622` del equipo con `PRODUCT.md`, `DESIGN.md` y el panel estático. La demo ejecutable adopta ahora el [manifiesto de operación](construction/U01-manifest-interface.md), con registro cronológico, selección persistente del expediente y etapas sustentadas individualmente. Suite ampliada a 51 pruebas; las dependencias de comunicación externa de D0 permanecen pendientes.
+**Actualización de interfaz:** se incorporaron `3032622` y la revisión posterior `b8e4071` del equipo con `PRODUCT.md`, `DESIGN.md` y el panel estático. La demo ejecutable adopta ahora la [mesa de operación con casos trazables](construction/U01-manifest-interface.md), con video y casos simultáneos, registro cronológico y selección persistente del expediente. El recorrido del backend se distingue del ciclo objetivo del PVB. Suite ampliada a 53 pruebas; las dependencias de comunicación externa de D0 permanecen pendientes.
 
 La captura siguiente se conserva como antecedente de Inception; sus frases «sin aplicación» y «Construction no iniciada» describen ese momento, anterior a la nueva autorización. Para arrancar y conocer el alcance real, consultar el [README](../README.md).
 

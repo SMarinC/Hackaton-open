@@ -75,6 +75,9 @@ const escapeHtml = (value) =>
       ],
   );
 const clock = formatClipTime;
+function setStatus(id, message) {
+  if ($(id).textContent !== message) $(id).textContent = message;
+}
 function error(message) {
   $("global-error").textContent = message;
   $("global-error").hidden = !message;
@@ -118,9 +121,12 @@ const analyzer = new VideoAnalyzer(video, {
     latest = tracker.update(detections, mediaTime);
     if (latest.reset) runId = crypto.randomUUID();
     $("inference-time").textContent = `${Math.round(inferenceMs)} ms`;
-    $("model-status").textContent = video.paused
-      ? "Pausado · no se acumula permanencia"
-      : "Analizando · COCO-SSD local";
+    setStatus(
+      "model-status",
+      video.paused
+        ? "Pausado · no se acumula permanencia"
+        : "Analizando · COCO-SSD local",
+    );
     for (const event of latest.events) {
       const record = {
         ...event,
@@ -292,10 +298,12 @@ async function refreshState() {
           : "Salida configurada; envío restringido · entrada pendiente"
         : "Pendiente de conexión";
     }
-    $("coordinator-status").textContent =
+    setStatus(
+      "coordinator-status",
       state.coordinator?.mode === "openai"
         ? "Coordinador OpenAI configurado · política acotada"
-        : "Coordinación local por reglas · OpenAI sin configurar";
+        : "Coordinación local por reglas · OpenAI sin configurar",
+    );
     const fingerprint = JSON.stringify({
       cases: state.cases,
       outbox: state.outbox,
@@ -308,8 +316,10 @@ async function refreshState() {
       renderCases();
     }
   } catch {
-    $("coordinator-status").textContent =
-      "Servicio de casos no disponible. Revisa el servidor local.";
+    setStatus(
+      "coordinator-status",
+      "Servicio de casos no disponible. Revisa el servidor local.",
+    );
   }
 }
 $("analyze").addEventListener("click", async () => {
