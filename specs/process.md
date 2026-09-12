@@ -1,6 +1,8 @@
 # Método y estado de elaboración del PRD
 
-**Producto:** PanelaTeam · **Fecha:** 2026-09-12 · **Estado:** borrador para revisión.
+**Producto:** PanelaTeam · **Fecha:** 2026-09-12 · **Estado:** PRD en revisión; primera unidad de Construction autorizada posteriormente.
+
+**Actualización de alcance:** después del PRD, el usuario pidió priorizar el video de referencia y «ejecutar ya el inicio de code», y revisar el cambio remoto `613ce94`. Esa instrucción autoriza construir U01 y registrar decisiones/validaciones sin exigir otra aprobación para empezar. Las referencias históricas siguientes a Construction pendiente describen la elaboración inicial; no invalidan esta autorización posterior. No se inventan aprobaciones globales del PRD ni gates del curso. Véase [estado vigente](../aidlc-docs/aidlc-state.md).
 
 ## Propósito y fuentes
 

@@ -1,0 +1,25 @@
+{
+  "name": "panelateam-video-operations",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "vite build",
+    "start": "node --env-file-if-exists=.env server/index.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@tensorflow-models/coco-ssd": "2.2.3",
+    "@tensorflow/tfjs-backend-cpu": "4.22.0",
+    "@tensorflow/tfjs-backend-webgl": "4.22.0",
+    "@tensorflow/tfjs-converter": "4.22.0",
+    "@tensorflow/tfjs-core": "4.22.0"
+  },
+  "devDependencies": {
+    "vite": "8.3.0"
+  }
+}
