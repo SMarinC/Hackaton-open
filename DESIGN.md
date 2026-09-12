@@ -202,3 +202,9 @@ Topbar única y fija: marca + separador vertical con subtítulo + tag de build a
 - **Don't** usar un radio de esquina "pill" en botones o tarjetas — el punto de estado circular es la única forma circular del sistema.
 - **Don't** cargar una webfont de display para esta superficie — el arranque instantáneo con la pila de sistema es una decisión ya tomada, no un placeholder.
 - **Don't** presentar una observación local del formulario de prueba como si fuera una respuesta real recibida por Slack o correo — el copy del propio componente ya lo distingue explícitamente y cualquier extensión del sistema debe conservar esa distinción.
+
+## Extensión de la demo funcional
+
+La regeneración sobre `b8e4071` conserva esta dirección de mesa de operación e incorpora un expediente con cronología verificable. El selector muestra un caso persistido a la vez; la tabla reúne video, operador local y mensajes de Slack/correo, conservando su estado real y mostrando el texto de cada mensaje bajo demanda. El recorrido principal corresponde a transiciones del backend; el ciclo objetivo del PVB se consulta por separado.
+
+Para acomodar ese registro, la columna de casos puede ampliarse respecto de la captura original. En pantallas estrechas la mesa se apila: la prioridad es conservar la legibilidad y el uso de los controles, extendiendo el soporte móvil que faltaba en el diseño documentado. Se mantienen la tipografía de sistema, la paleta cálida y la separación entre sombra de medios y borde de datos.

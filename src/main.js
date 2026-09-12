@@ -1,11 +1,12 @@
 import "./style.css";
 import { ZoneTracker } from "./tracker.js";
 import { VideoAnalyzer } from "./vision.js";
+import { renderCase, statusLabel, formatClipTime } from "./case-manifest.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video");
 const ctx = $("overlay").getContext("2d");
-const colors = ["#9fe2c3", "#f3bf85", "#a9c8fa"];
+const colors = ["#cbb989", "#99b9cc", "#f5efdf"];
 let zones = [
   {
     id: "checkout",
@@ -50,6 +51,21 @@ let latest = { tracks: [], zoneStats: [] };
 let events = [];
 let caseState = { cases: [], outbox: [] };
 let stateFingerprint = "";
+let navigationFingerprint = "";
+const emptyCasesHtml = $("cases").innerHTML;
+let selectedCaseId = "";
+try {
+  selectedCaseId = sessionStorage.getItem("panela-selected-case") || "";
+} catch {
+  /* Storage can be disabled. */
+}
+function rememberCase() {
+  try {
+    sessionStorage.setItem("panela-selected-case", selectedCaseId);
+  } catch {
+    /* Selection still works without storage. */
+  }
+}
 const escapeHtml = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
@@ -58,8 +74,10 @@ const escapeHtml = (value) =>
         s
       ],
   );
-const clock = (t) =>
-  `${String(Math.floor((t || 0) / 60)).padStart(2, "0")}:${String(Math.floor((t || 0) % 60)).padStart(2, "0")}`;
+const clock = formatClipTime;
+function setStatus(id, message) {
+  if ($(id).textContent !== message) $(id).textContent = message;
+}
 function error(message) {
   $("global-error").textContent = message;
   $("global-error").hidden = !message;
@@ -94,7 +112,7 @@ const analyzer = new VideoAnalyzer(video, {
   onError: (err) => {
     analyzing = false;
     video.pause();
-    $("analyze").textContent = "↻ Reintentar análisis";
+    $("analyze").textContent = "Reintentar análisis";
     error(
       `No se pudo analizar el video. Comprueba la conexión o abre un archivo local. ${err.message}`,
     );
@@ -103,9 +121,12 @@ const analyzer = new VideoAnalyzer(video, {
     latest = tracker.update(detections, mediaTime);
     if (latest.reset) runId = crypto.randomUUID();
     $("inference-time").textContent = `${Math.round(inferenceMs)} ms`;
-    $("model-status").textContent = video.paused
-      ? "Pausado · no se acumula permanencia"
-      : "Analizando · COCO-SSD local";
+    setStatus(
+      "model-status",
+      video.paused
+        ? "Pausado · no se acumula permanencia"
+        : "Analizando · COCO-SSD local",
+    );
     for (const event of latest.events) {
       const record = {
         ...event,
@@ -144,11 +165,10 @@ function renderObservations() {
   $("max-dwell").textContent = analyzing
     ? `${Math.max(0, ...latest.tracks.map((t) => t.dwell)).toFixed(1)} s`
     : "—";
-  const threshold = tracker.dwellThreshold;
   $("zones").innerHTML = zones
     .map((zone, i) => {
       const stat = latest.zoneStats.find((s) => s.id === zone.id);
-      return `<div class="zone-row"><div class="zone-row-name"><span class="zone-dot" style="--zone-color:${colors[i % colors.length]}"></span>${escapeHtml(zone.name)}</div><div class="zone-meter"><span style="width:${Math.min(100, ((stat?.maxDwell || 0) / threshold) * 100)}%"></span></div><strong>${stat?.count || 0} detectadas · ${(stat?.maxDwell || 0).toFixed(1)} s</strong></div>`;
+      return `<div class="zone-row"><div class="zone-row-name"><span class="zone-index mono">${String(i + 1).padStart(2, "0")}</span>${escapeHtml(zone.name)}</div><strong>${stat?.count || 0} detectadas · ${(stat?.maxDwell || 0).toFixed(1)} s</strong></div>`;
     })
     .join("");
 }
@@ -170,6 +190,15 @@ function draw() {
     ctx.fillStyle = `${colors[i % colors.length]}0d`;
     ctx.fill();
     ctx.setLineDash([]);
+    const label = String(i + 1).padStart(2, "0");
+    const [zx, zy] = zone.polygon[0];
+    const tx = Math.min(w - 34, zx * w + 8);
+    const ty = Math.min(h - 26, zy * h + 8);
+    ctx.fillStyle = "#2a241c";
+    ctx.fillRect(tx, ty, 28, 24);
+    ctx.font = "600 15px monospace";
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fillText(label, tx + 5, ty + 17);
   });
   latest.tracks.forEach((track) => {
     const index = zones.findIndex((z) => z.id === track.zoneId);
@@ -206,89 +235,75 @@ function renderEvents() {
     )
     .join("");
 }
-const statusLabels = {
-  review_required: "Requiere revisión",
-  assigned: "Reposición asignada",
-  awaiting_delivery: "Consulta a proveedor",
-  closed: "Cierre humano",
-  discarded: "Sin incidencia",
-};
-const deliveryLabels = {
-  pending_connection: "Pendiente de conexión",
-  ready: "Listo para enviar",
-  send_disabled: "Envío deshabilitado",
-  blocked_recipient: "Destinatario no autorizado",
-  provider_accepted: "Aceptado por API",
-  failed: "Falló el envío",
-  result_unknown: "Resultado desconocido",
-  sending: "Enviando",
-  cancelled: "Cancelado",
-};
-const intentLabels = {
-  ask_review: "Revisar sección",
-  assign_internal: "Asignar reposición",
-  ask_eta: "Consultar entrega",
-  report: "Reporte de estado",
-};
-function renderCases() {
-  $("case-count").textContent = caseState.cases.length;
-  if (!caseState.cases.length) return;
-  $("cases").innerHTML = caseState.cases
-    .map((item) => {
-      const source = item.source || {};
-      const messages = caseState.outbox.filter((m) => m.case_id === item.id);
-      const terminal = ["closed", "discarded"].includes(item.status);
-      const descriptions = {
-        review_required: `${Number(source.duration_s || 0).toFixed(1)} s observados en ${clock(source.media_time_s)}. Se requiere revisar la sección; no demuestra faltante.`,
-        assigned:
-          "Incidencia y stock confirmados localmente. Reposición asignada; falta verificar ejecución.",
-        awaiting_delivery:
-          "Incidencia confirmada, sin stock. Consulta de entrega preparada; el caso sigue pendiente.",
-        closed:
-          "Cierre confirmado por el operador local. No hay verificación visual posterior.",
-        discarded:
-          "El operador local descartó la incidencia. No se cuenta como reposición completada.",
-      };
-      const messagesHtml = messages
-        .map(
-          (m) => `<details class="message-item">
-      <summary><strong>${m.channel === "slack" ? "Slack" : "Correo"} · ${escapeHtml(intentLabels[m.intent] || m.intent)}</strong><span>${escapeHtml(deliveryLabels[m.status] || m.status)}</span></summary>
-      <p>${escapeHtml(m.text)}</p></details>`,
-        )
-        .join("");
-      const observationHtml = terminal
-        ? ""
-        : `<details><summary>Registrar observación local</summary>
-      <small>Este control prueba el caso; no representa una respuesta recibida por Slack o correo.</small>
-      <form data-case="${escapeHtml(item.id)}" data-version="${item.version}">
-      <label>Resultado observado<select name="kind">
-      <option value="stock_confirmed">Faltante confirmado; hay stock en bodega</option>
-      <option value="no_stock">Faltante confirmado; no hay stock</option>
-      ${item.status === "assigned" ? '<option value="restocked">Reposición realizada</option>' : ""}
-      <option value="no_issue">No hay incidencia</option></select></label>
-      <label>Nota de verificación<textarea name="note" required minlength="3" maxlength="1000" placeholder="Describe qué se comprobó y dónde."></textarea></label>
-      <button class="secondary" type="submit">Guardar observación local</button><span class="form-result" role="status"></span></form></details>`;
-      return `<article class="case-item" data-case-id="${escapeHtml(item.id)}">
-      <div class="case-heading"><span class="mono">${escapeHtml(item.id.slice(0, 12))}</span><span class="case-status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
-      <h3>${escapeHtml(item.zone_name || "Revisión de sección")}</h3>
-      <p>${escapeHtml(descriptions[item.status] || item.status)}</p>${messagesHtml}${observationHtml}</article>`;
-    })
-    .join("");
+function renderCaseNavigation() {
+  const items = caseState.cases;
+  $("case-count").textContent = items.length;
+  $("nav-case-count").textContent = items.length;
+  $("case-navigation").hidden = !items.length;
+  if (!items.length) return;
+  if (!items.some((item) => item.id === selectedCaseId)) {
+    selectedCaseId = items[0].id;
+    rememberCase();
+  }
+  const fingerprint = JSON.stringify([
+    selectedCaseId,
+    items.map(({ id, zone_name, status }) => [id, zone_name, status]),
+  ]);
+  if (fingerprint !== navigationFingerprint) {
+    navigationFingerprint = fingerprint;
+    $("case-select").innerHTML = items
+      .map(
+        (item) =>
+          `<option value="${escapeHtml(item.id)}"${item.id === selectedCaseId ? " selected" : ""}>${escapeHtml(item.id.replace("case_", "").slice(0, 8))} · ${escapeHtml(item.zone_name)} · ${escapeHtml(statusLabel(item.status))}</option>`,
+      )
+      .join("");
+  }
+  $("latest-case").hidden = selectedCaseId === items[0].id;
 }
+function renderCases() {
+  renderCaseNavigation();
+  const items = caseState.cases;
+  if (!items.length) {
+    $("cases").innerHTML = emptyCasesHtml;
+    return;
+  }
+  $("cases").innerHTML = renderCase(
+    items.find((item) => item.id === selectedCaseId),
+    caseState.outbox,
+  );
+}
+$("case-select").addEventListener("change", () => {
+  selectedCaseId = $("case-select").value;
+  rememberCase();
+  $("case-feedback").textContent = "";
+  renderCases();
+});
+$("latest-case").addEventListener("click", () => {
+  selectedCaseId = caseState.cases[0]?.id || "";
+  rememberCase();
+  $("case-feedback").textContent = "";
+  renderCases();
+  $("case-select").focus();
+});
 async function refreshState() {
   try {
     const state = await api("/state");
     caseState = state;
+    renderCaseNavigation();
     for (const channel of ["slack", "email"]) {
       const value = state.channels?.[channel];
       $(`${channel}-status`).textContent = value?.configured
-        ? "Salida configurada · entrada pendiente"
+        ? value.send_enabled && value.recipient_allowed
+          ? "Salida habilitada · entrada pendiente"
+          : "Salida configurada; envío restringido · entrada pendiente"
         : "Pendiente de conexión";
     }
-    $("coordinator-status").textContent =
+    setStatus(
+      "coordinator-status",
       state.coordinator?.mode === "openai"
         ? "Coordinador OpenAI configurado · política acotada"
-        : "Coordinación local por reglas · OpenAI sin configurar";
+        : "Coordinación local por reglas · OpenAI sin configurar",
+    );
     const fingerprint = JSON.stringify({
       cases: state.cases,
       outbox: state.outbox,
@@ -301,14 +316,16 @@ async function refreshState() {
       renderCases();
     }
   } catch {
-    $("coordinator-status").textContent =
-      "Servicio de casos no disponible. Revisa el servidor local.";
+    setStatus(
+      "coordinator-status",
+      "Servicio de casos no disponible. Revisa el servidor local.",
+    );
   }
 }
 $("analyze").addEventListener("click", async () => {
   if (analyzing && !video.paused) {
     video.pause();
-    $("analyze").textContent = "▶ Continuar análisis";
+    $("analyze").textContent = "Continuar análisis";
     return;
   }
   $("analyze").disabled = true;
@@ -322,10 +339,10 @@ $("analyze").addEventListener("click", async () => {
     analyzing = true;
     await video.play();
     analyzer.start();
-    $("analyze").textContent = "Ⅱ Pausar análisis";
+    $("analyze").textContent = "Pausar análisis";
   } catch (err) {
     error(`No se pudo iniciar: ${err.message}`);
-    $("analyze").textContent = "↻ Reintentar análisis";
+    $("analyze").textContent = "Reintentar análisis";
   } finally {
     $("analyze").disabled = false;
   }
@@ -347,14 +364,14 @@ video.addEventListener("seeking", () =>
 );
 video.addEventListener("pause", () => {
   if (analyzing) {
-    $("analyze").textContent = "▶ Continuar análisis";
+    $("analyze").textContent = "Continuar análisis";
     $("model-status").textContent = "Pausado · no se acumula permanencia";
   }
 });
 video.addEventListener("play", () => {
   if (analyzing) {
     analyzer.start();
-    $("analyze").textContent = "Ⅱ Pausar análisis";
+    $("analyze").textContent = "Pausar análisis";
   }
 });
 video.addEventListener("error", () => {
@@ -372,12 +389,14 @@ $("video-file").addEventListener("change", (event) => {
   localUrl = URL.createObjectURL(file);
   sourceId = `local-${crypto.randomUUID()}`;
   video.src = localUrl;
+  video.setAttribute("aria-label", `Video local: ${file.name}`);
   resetTracking("Video local · detector listo para iniciar");
   $("source-title").textContent = file.name;
+  $("source-kind").textContent = "Archivo local · análisis en este navegador";
   $("source-note").textContent =
     "Archivo local: los píxeles se procesan en este navegador. Verifica la procedencia y autorización del material antes de usarlo públicamente.";
   $("reference").hidden = false;
-  $("analyze").textContent = "▶ Analizar video";
+  $("analyze").textContent = "Analizar video";
 });
 function useReference() {
   video.pause();
@@ -389,11 +408,17 @@ function useReference() {
   }
   sourceId = manifest.source_id;
   video.src = manifest.url;
+  video.setAttribute(
+    "aria-label",
+    "Video CCTV de referencia, reproducción histórica",
+  );
   $("source-title").textContent = "Tienda de referencia · CCTV 2017";
+  $("source-kind").textContent =
+    "Reproducción histórica · análisis en este navegador";
   $("source-note").innerHTML =
     `Fuente: <a href="${escapeHtml(manifest.source_page)}" target="_blank" rel="noreferrer">HDCCTV Cameras / Wikimedia Commons</a>. Grabación histórica de productos para el hogar; zonas propuestas para explorar circulación. Derechos: PD-automated según ficha de Commons. No es una tienda de PanelaTeam ni una cámara en vivo.`;
   $("reference").hidden = true;
-  $("analyze").textContent = "▶ Analizar video";
+  $("analyze").textContent = "Analizar video";
 }
 $("reference").addEventListener("click", useReference);
 $("zones-json").value = JSON.stringify(zones, null, 2);
@@ -433,6 +458,35 @@ $("events").addEventListener("click", (event) => {
     deliverEvent(record);
   }
 });
+$("cases").addEventListener("click", (event) => {
+  const button = event.target.closest(".review-evidence");
+  if (!button) return;
+  const mediaTime = Number(button.dataset.mediaTime);
+  if (button.dataset.source !== sourceId) {
+    $("case-feedback").textContent = button.dataset.source.startsWith("local-")
+      ? "La fuente local de este caso ya no está vinculada. El salto solo está disponible mientras siga abierto ese mismo archivo de la sesión original."
+      : button.dataset.source === manifest?.source_id
+        ? "Vuelve al video de referencia CCTV para revisar el instante de este caso."
+        : "La fuente de este caso no está vinculada al video abierto. Consulta su procedencia en el expediente.";
+    return;
+  }
+  if (
+    !Number.isFinite(mediaTime) ||
+    !Number.isFinite(video.duration) ||
+    mediaTime < 0 ||
+    mediaTime > video.duration
+  ) {
+    $("case-feedback").textContent =
+      "El instante no está disponible. Espera a que cargue el video o comprueba la fuente.";
+    return;
+  }
+  video.pause();
+  video.currentTime = mediaTime;
+  $("case-feedback").textContent =
+    `Video pausado en ${clock(mediaTime)}. El expediente conserva la observación original; no se ejecutó una nueva verificación.`;
+  $("video-sheet").scrollIntoView({ block: "start" });
+  video.focus({ preventScroll: true });
+});
 $("cases").addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = event.target;
@@ -459,6 +513,8 @@ $("cases").addEventListener("submit", async (event) => {
       expected_version: Number(form.dataset.requestVersion),
     });
     form.closest("details").open = false;
+    $("case-feedback").textContent =
+      "Observación local guardada. El expediente está actualizado.";
     stateFingerprint = "";
     await refreshState();
   } catch (err) {

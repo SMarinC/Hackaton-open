@@ -187,6 +187,7 @@ p { line-height: 1.5; margin: 0; }
   white-space: nowrap;
 }
 .delivery-status.pending { color: var(--amber); background: oklch(95% 0.04 65); }
+.delivery-status.cancelled { color: var(--muted); background: var(--page-bg); }
 .delivery-status.blocked { color: var(--error); background: oklch(95% 0.025 28); }
 .message-text {
   font-size: 0.74rem;

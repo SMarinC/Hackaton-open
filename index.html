@@ -3,41 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f1e9" />
-    <title>PanelaTeam · Visión operativa</title>
+    <meta name="theme-color" content="oklch(96% 0.015 80)" />
+    <title>PanelaTeam · Mesa de operación</title>
   </head>
   <body>
+    <a class="skip-link" href="#main">Ir al contenido</a>
     <header class="topbar">
-      <a class="brand" href="/" aria-label="PanelaTeam, inicio"
-        ><span class="brand-mark" aria-hidden="true">P</span>PanelaTeam<span
-          class="brand-sub"
-          >Visión operativa</span
-        ></a
-      >
-      <span class="build-tag">Prototipo · video → operación</span>
-    </header>
-    <main>
-      <div class="page-heading">
-        <div>
-          <p class="eyebrow">CENTRO DE OPERACIÓN</p>
-          <h1>Lo que pasa en la tienda.</h1>
-          <p>
-            Observa recorridos. Detecta permanencia. Coordina la siguiente
-            acción.
-          </p>
+      <div class="topbar-inner">
+        <div class="brand">
+          <a class="wordmark" href="/" aria-label="PanelaTeam, inicio">PanelaTeam</a>
+          <span class="topbar-subtitle">Mesa de operación</span>
         </div>
-        <button id="export" class="secondary">Exportar evidencia ↗</button>
+        <div class="topbar-actions">
+          <span class="build-tag">
+            Prototipo · <span id="nav-case-count" class="mono">0</span> casos
+          </span>
+          <button id="export" class="quiet">Exportar evidencia</button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="workspace">
+      <div class="page-intro">
+        <p class="eyebrow">VIDEO Y COORDINACIÓN</p>
+        <h1>Mesa de operación</h1>
+        <p>Observa una sección, revisa la evidencia y da seguimiento a cada caso.</p>
       </div>
       <div id="global-error" class="error-banner" role="alert" hidden></div>
-      <div class="workspace">
-        <section class="video-section" aria-label="Análisis de video">
-          <div class="section-bar">
+      <div class="workbench">
+        <section
+          id="video-sheet"
+          class="video-section"
+          aria-labelledby="source-title"
+        >
+          <div class="section-heading video-heading">
             <div>
-              <span class="status-dot"></span
-              ><strong id="source-title">Tienda de referencia</strong
-              ><span class="tag">VIDEO GRABADO</span>
+              <p class="eyebrow">OBSERVACIÓN</p>
+              <h2 id="source-title">Tienda de referencia · CCTV 2017</h2>
+              <p id="source-kind">
+                Reproducción histórica · análisis en este navegador
+              </p>
             </div>
-            <span id="video-clock" class="mono">00:00</span>
+            <div class="video-heading-meta">
+              <span class="tag">VIDEO GRABADO</span>
+              <span class="clip-clock">Clip <span id="video-clock" class="mono">00:00</span></span>
+            </div>
           </div>
           <div id="video-stage" class="video-stage">
             <video
@@ -51,42 +60,38 @@
             ></video>
             <canvas id="overlay" aria-hidden="true"></canvas>
             <div id="video-empty">Cargando video de referencia…</div>
-            <div class="stage-legend">
-              <span>● Detección local</span><span>◇ IDs temporales</span>
-            </div>
           </div>
           <div class="player-toolbar">
             <div class="toolbar-actions">
-              <button id="analyze" class="primary">▶ Analizar video</button
-              ><label class="file-button secondary"
+              <button id="analyze" class="primary">▶ Analizar video</button>
+              <label class="file-button secondary"
                 >Abrir video local<input
                   id="video-file"
                   type="file"
-                  accept="video/*" /></label
-              ><button id="reference" class="quiet" hidden>
+                  accept="video/*"
+              /></label>
+              <button id="reference" class="quiet" hidden>
                 Volver a referencia
               </button>
             </div>
             <span id="model-status" role="status">Detector sin iniciar</span>
           </div>
-          <div class="observation-strip">
-            <div>
-              <span>Personas detectadas</span><strong id="people-count">—</strong>
-            </div>
-            <div>
-              <span>Mayor permanencia actual</span
-              ><strong id="max-dwell">—</strong>
-            </div>
-            <div>
-              <span>Tiempo de inferencia</span
-              ><strong id="inference-time">—</strong>
-            </div>
-          </div>
-          <section class="zones-section" aria-labelledby="zones-title">
-            <div class="section-heading">
-              <h2 id="zones-title">Actividad por zona</h2>
+          <p class="measurement-line" aria-label="Observaciones del cuadro actual">
+            <span
+              ><strong id="people-count" class="mono">—</strong> personas
+              detectadas</span
+            ><span
+              >Mayor permanencia
+              <strong id="max-dwell" class="mono">—</strong></span
+            >
+            <span>Inferencia <strong id="inference-time" class="mono">—</strong></span>
+          </p>
+          <details class="zones-section" open>
+            <summary id="zones-title">Zonas y criterio de revisión</summary>
+            <div class="section-heading zone-heading">
+              <p>Una permanencia abre una revisión; no demuestra un faltante.</p>
               <label class="threshold-label"
-                >Abrir revisión a los
+                >Revisar a los
                 <input
                   id="threshold"
                   type="number"
@@ -101,77 +106,104 @@
             </div>
             <div id="zones" class="zones"></div>
             <details class="zone-config">
-              <summary>Configurar zonas del video</summary>
+              <summary>Editar zonas del video</summary>
               <p>
-                Coordenadas normalizadas de 0 a 1. Una persona pertenece a la
-                zona que contiene el centro inferior de su caja. Cambiar zonas
-                reinicia la medición.
+                Coordenadas de 0 a 1. Se usa el centro inferior de cada caja;
+                cambiar zonas reinicia la medición.
               </p>
               <label for="zones-json">Zonas en JSON</label
-              ><textarea id="zones-json" rows="8" spellcheck="false"></textarea
-              ><button id="save-zones" class="secondary">
+              ><textarea id="zones-json" rows="8" spellcheck="false"></textarea>
+              <button id="save-zones" class="secondary">
                 Aplicar zonas y reiniciar
               </button>
               <p id="zone-error" role="alert"></p>
             </details>
-          </section>
-          <p class="source-note" id="source-note"></p>
+          </details>
+          <details class="source-details">
+            <summary>Fuente y límites de la observación</summary>
+            <p class="source-note" id="source-note"></p>
+            <p>
+              IDs temporales, sin reconocimiento facial. Pueden cambiar con cruces
+              y oclusiones. El score del detector no es exactitud validada.
+            </p>
+          </details>
         </section>
-        <aside class="operations" aria-labelledby="operations-title">
-          <div class="section-heading">
+        <section class="operations" aria-labelledby="operations-title">
+          <div class="section-heading operations-heading">
             <div>
-              <p class="eyebrow">DE LA SEÑAL A LA ACCIÓN</p>
-              <h2 id="operations-title">Mesa de coordinación</h2>
+              <p class="eyebrow">COORDINACIÓN</p>
+              <h2 id="operations-title" tabindex="-1">Casos de operación</h2>
             </div>
-            <span id="case-count" class="count-badge">0</span>
-          </div>
-          <div class="flow-steps">
-            <span class="active">01 Observar</span><span>02 Consultar</span
-            ><span>03 Verificar</span>
+            <span class="count-badge">
+              <span id="case-count" class="mono">0</span> registrados
+            </span>
           </div>
           <div class="connection-summary">
-            <div>
-              <strong>Slack</strong><span id="slack-status">Comprobando…</span>
-            </div>
-            <div>
-              <strong>Correo</strong><span id="email-status">Comprobando…</span>
-            </div>
-            <p id="coordinator-status">Consultando coordinador…</p>
+            <p>
+              <strong>Demostración local.</strong> Video de archivo; inventario
+              ficticio y observaciones del operador. Las respuestas externas aún
+              no están integradas.
+            </p>
+            <dl>
+              <div>
+                <dt>
+                  <span class="lane lane-slack" aria-hidden="true">S</span> Slack
+                </dt>
+                <dd id="slack-status">Comprobando…</dd>
+              </div>
+              <div>
+                <dt>
+                  <span class="lane lane-correo" aria-hidden="true">C</span>
+                  Correo
+                </dt>
+                <dd id="email-status">Comprobando…</dd>
+              </div>
+            </dl>
+            <p id="coordinator-status" role="status">Consultando coordinador…</p>
           </div>
+          <div class="case-navigation" id="case-navigation" hidden>
+            <label for="case-select">Revisar caso</label
+            ><select id="case-select"></select
+            ><button id="latest-case" class="quiet" hidden>
+              Ver el más reciente
+            </button>
+          </div>
+          <p id="case-feedback" class="case-feedback" role="status"></p>
           <div id="cases" class="cases">
             <div class="empty-case">
-              <span class="empty-symbol" aria-hidden="true">◎</span>
-              <h3>Todo empieza con una observación</h3>
+              <h3>El primer caso empieza en el video</h3>
               <p>
-                Al superar el umbral en una zona, aquí aparecerá una revisión
-                con su evidencia y siguiente gestión.
+                Pulsa <strong>Analizar video</strong>. Cuando una persona supere
+                el umbral en una zona, aquí quedarán su evidencia y el primer
+                paso de revisión.
               </p>
-              <small>Permanecer en una zona no demuestra un faltante.</small>
             </div>
           </div>
-        </aside>
+        </section>
       </div>
-      <section class="event-section" aria-labelledby="events-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">EVIDENCIA TEMPORAL</p>
-            <h2 id="events-title">Registro de observaciones</h2>
-          </div>
-          <span id="event-count">0 eventos en esta sesión</span>
-        </div>
-        <div id="events" class="events">
+      <details class="event-section" open>
+        <summary>
+          <span id="events-title">Observaciones de esta sesión</span
+          ><span id="event-count">0 eventos</span>
+        </summary>
+        <div
+          id="events"
+          class="events"
+          role="region"
+          aria-labelledby="events-title"
+          tabindex="0"
+        >
           <p class="muted">
-            Inicia el detector para registrar permanencia observada sobre el
-            video.
+            Inicia el detector para registrar permanencia sobre el video.
           </p>
         </div>
-      </section>
-      <footer>
-        <span>PanelaTeam / Agents, Everywhere · Medellín 2026</span
-        ><span>Procesamiento visual local · Sin reconocimiento facial</span
-        ><span><a href="demo/panel.html">Ver reporte de caso ↗</a></span>
-      </footer>
+      </details>
     </main>
+    <footer class="colophon">
+      <span>PanelaTeam · Agents, Everywhere</span>
+      <a href="/demo/panel.html">Ejemplos de reporte (ficticios)</a>
+      <span>Medellín, 2026 · Prototipo</span>
+    </footer>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
