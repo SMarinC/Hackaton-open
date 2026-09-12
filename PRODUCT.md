@@ -1,0 +1,79 @@
+# Product
+
+<!-- impeccable:product-schema 1 -->
+
+## Platform
+
+web
+
+## Stack
+
+Static HTML/CSS/JS. Decidido para el reporte/panel del demo dado el límite de ~3 horas de hackathon: cero setup, cero build, se abre directo en el navegador.
+
+## Users
+
+- **Encargado de tienda** (usuario principal del demo): atiende excepciones, revisa el resumen/reporte del caso, y configura o acepta las reglas de operación (la "política").
+- **Responsable de reposición**: recibe la tarea vía Slack, responde sobre disponibilidad, reporta ejecución o bloqueo.
+- **Compras / proveedor autorizado** (contacto externo, representado por una cuenta de prueba en el demo): responde disponibilidad o fecha de entrega por correo; una consulta no constituye un pedido.
+- **Propietario / operaciones**: decide contratar según reducción de coordinación, costo y utilidad comprobada. Posible veto de confianza sobre el acceso a cámaras/datos.
+- **Administrador**: conecta fuentes, identidades y canales; no obtiene por ello facultades comerciales.
+
+## Product Purpose
+
+PanelaTeam es un agente que detecta posibles faltantes en la exhibición de una tienda de abarrotes con secciones diferenciadas, y en lugar de solo avisar, **conduce la coordinación completa** con las personas responsables por Slack y correo reales: consulta inventario, abre el hilo con el responsable, espera y procesa su respuesta, escala o pregunta a un tercero (compras/proveedor) cuando falta mercancía, registra la tarea, verifica la ejecución con evidencia y cierra el caso reportando en ambos canales.
+
+El trabajo que reduce es **perseguir información y conducir cada transición entre personas y sistemas** — no reemplaza el trabajo físico de reposición ni las decisiones que exceden sus facultades (comprar, cambiar precio, aprobar promociones).
+
+Éxito para el demo: un caso completo, trazable de punta a punta, sobrevive un recargo/reintento sin duplicar la tarea, y dos respuestas distintas al mismo evento producen gestiones distintas (prueba de que el agente decide con contexto y no solo dispara un aviso fijo).
+
+## Positioning
+
+Usar Slack, varios agentes o una API de visión es replicable por cualquier competidor y no es, por sí solo, una ventaja. La hipótesis de diferenciación es **confianza operativa**: un historial verificable de decisiones, comunicaciones, recuperación de fallos y cierres correctos que permite delegar más coordinación rutinaria con menos supervisión con el tiempo. Hoy esa ventaja no existe todavía — es una hipótesis a validar, no un activo ya poseído.
+
+Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y ejecución retail; la diferenciación por validar es una instalación acotada, conversación contextual con los responsables reales, y cierre del caso con poco trabajo del supervisor.
+
+## Operating Context
+
+- Segmento: tiendas de abarrotes con secciones diferenciadas. Piloto propuesto (no confirmado): una tienda con exhibición observable, encargado identificable, inventario consultable y responsable de reposición disponible.
+- Canales de coordinación **obligatorios para el demo (D0)**: Slack (hilo por caso, conversación operativa principal) y correo (contacto externo representado por cuenta de prueba). Una bandeja simulada no satisface el requisito D0.
+- Evidencia de entrada: video/cámara con procedencia declarada (clip de internet con condiciones de reutilización verificadas para el demo; sin reconocimiento facial, solo IDs temporales de seguimiento).
+- Datos comerciales: POS, inventario y catálogo — fixtures ficticios para el demo, etiquetados como tales en cualquier reporte.
+- Política configurable: tienda, identidad, acciones admitidas, contactos, información compartible, límites, horario, recordatorios, escalamiento, vigencia y versión.
+- Ciclo de estados del caso: `detectado → en validación → propuesta → aprobado → asignado → ejecución reportada → verificado` (también `descartado`, `bloqueado`, `cancelado`, con motivo).
+- Concurso: AI Tinkerers Medellín, "Agents, Everywhere" — entrega requiere repositorio público, video de dos minutos y demás materiales del handbook. Candidatura aún no enviada.
+
+## Capabilities and Constraints
+
+**Obligatorio para el demo (D0):** un caso contextual con evidencia y procedencia declaradas, política activa, Slack bidireccional real, correo enviado/recibido correlacionado al mismo caso, reporte enviado en ambos canales, tarea/seguimiento persistentes (sobreviven un recargo), y un fallo recuperable demostrado (reintento sin duplicar la tarea).
+
+**Autonomía del agente dentro de la política:** puede consultar datos autorizados, pedir confirmación/evidencia, notificar, recordar, escalar, entregar reportes, y asignar reposición interna automáticamente cuando la regla vigente cubre rol/producto/zona/cantidad/stock/condiciones. Fuera de eso, pide una decisión puntual. Nunca infiere autorización nueva de un correo/mensaje entrante; ampliar destinatarios o permisos requiere a una persona facultada.
+
+**Explícitamente fuera de alcance D0:** comprar, aceptar cotización, pagar, o cambiar precio/promoción; detector de visión automático validado (el demo puede usar anotación humana, declarada como tal, en vez de detección real); métricas de permanencia y rankings comerciales; cámaras/POS reales, más de una tienda, o evaluación causal de promociones (todo esto es piloto/evolución posterior, no D0).
+
+**Terminología del proyecto:** PVB = Product Vision Board; D0 = alcance obligatorio de la demo; "caso" = unidad de trabajo que agrupa evento, consultas, decisión y cierre; "política" = reglas de autonomía configuradas; "procedencia" = si un dato es captura real, reproducción de archivo, dato sintético o anotación humana.
+
+**Pendiente/no decidido (no inventar):** primer ciclo definitivo (reposición es el candidato, no confirmado por el equipo), clip de video concreto, cuentas de prueba de Slack/correo (aún no existen), tienda piloto, presupuesto, y stack/infraestructura del agente en sí (fuera del panel de reporte).
+
+## Brand Commitments
+
+Nombre de equipo: **PanelaTeam** (nombre comercial del producto todavía pendiente). Foto del equipo en `assets/panelateam-medellin.png`, con procedencia documentada en `assets/README.md`. Sin guía de marca, paleta o tipografía confirmada todavía.
+
+## Evidence on Hand
+
+- **No hay cuentas de prueba de Slack ni correo conectadas todavía** (confirmado explícitamente por el usuario en el PVB v0.2) — es la dependencia de primera prioridad antes de poder demostrar el D0 real.
+- No hay video/cámara elegido; el demo usará material de internet con condiciones de reutilización verificadas, declarado como tal — no se presenta como captura propia.
+- Datos de POS/inventario serán fixtures ficticios, etiquetados como tales en cualquier reporte o UI.
+- No existen resultados de piloto, métricas operativas reales, ROI ni comparación causal — el PVB v0.2 prohíbe explícitamente publicar cifras inventadas o atribuciones causales indebidas.
+- La candidatura al concurso no ha sido enviada; el PRD/PVB documentado no acredita una nota de implementación.
+
+## Product Principles
+
+1. **Nunca afirmar lo que la evidencia no sostiene.** Imagen insuficiente o dato desactualizado → el agente pide aclaración; no inventa un cierre ni un resultado.
+2. **Observación distinta de inferencia, siempre etiquetada.** "Cero observado" ≠ "zona no observable"; "retirada del estante" ≠ "compra confirmada"; "stock de tienda" ≠ "stock de bodega". El reporte no colapsa estas distinciones.
+3. **Procedencia declarada en cada dato y cada reporte.** Real, fixture o anotación humana — nunca mezclados sin etiqueta, ni en el demo ni en el panel.
+4. **El agente actúa dentro de una política explícita, nunca por inferencia de un mensaje entrante.** Ampliar permisos o destinatarios es un cambio de configuración humano, no una conclusión del agente.
+5. **Reportar solo a quien corresponde.** Reporte operativo a personal, resumen a encargado, consulta mínima a tercero — no distribuir todo a todos.
+
+## Accessibility & Inclusion
+
+No se estableció un requisito específico todavía; el panel del demo debe cumplir como mínimo contraste y semántica básica dado el tiempo disponible, sin auditoría formal en esta pasada.
