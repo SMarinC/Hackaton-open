@@ -251,7 +251,8 @@ function renderProvenance(item) {
       ? `<button class="quiet review-evidence" type="button" data-source="${escape(source.source_id)}" data-media-time="${escape(source.media_time_s)}">Revisar instante en el video</button>`
       : "";
   return `<div class="case-provenance">
-    <p class="evidence-note">Clip: t = <span class="mono">${formatClipTime(source.media_time_s)}</span> · Permanencia acumulada: <span class="mono">${seconds(source.duration_s)}</span>. La permanencia motiva una revisión; no demuestra faltante ni compra.</p>
+    <p class="evidence-note">Clip: t = <span class="mono">${formatClipTime(source.media_time_s)}</span> · Permanencia registrada: <span class="mono">${seconds(source.duration_s)}</span>. La permanencia motiva una revisión; no demuestra faltante ni compra.</p>
+    ${item.source_integrity === "opening_event_v1" ? "" : '<p class="evidence-note">Registro anterior al control de integridad: la duración pudo actualizarse después del evento inicial. No usar como evidencia temporal validada.</p>'}
     ${evidenceButton}
     <details class="evidence-details"><summary>Evidencia y procedencia</summary><dl>
       <dt>ID del caso</dt><dd class="mono">${escape(hasText(item.id) ? item.id : "ID desconocido")}</dd>

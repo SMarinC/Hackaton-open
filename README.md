@@ -1,6 +1,9 @@
 # Panela Stocks · Operación de tiendas de abarrotes
 
-![PanelaTeam en las montañas de Medellín](assets/panelateam-medellin.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/brand/panela-stocks-logo-inverse.svg" />
+  <img src="public/brand/panela-stocks-logo.svg" alt="Panela Stocks, solución del equipo PanelaTeam" width="376" height="77" />
+</picture>
 
 **Panela Stocks** es la solución desarrollada por el equipo **PanelaTeam** para **Agents, Everywhere**, AI Tinkerers Medellín, septiembre de 2026.
 
@@ -65,8 +68,20 @@ El usuario priorizó video y autorizó iniciar código. La grabación de referen
 
 Las comunicaciones rutinarias usan una política previa, sin aprobación por mensaje. Compras y cambios de precio reales quedan fuera de la demo. El equipo aún no dispone de cuentas de prueba; su preparación y conexión son una dependencia del recorrido.
 
+## Identidad del equipo
+
+<details>
+<summary>Ilustración de PanelaTeam en Medellín</summary>
+
+<img src="https://raw.githubusercontent.com/SMarinC/Hackaton-open/9965333089ac8db6aa835341e65daf5b5c602f9f/assets/panelateam-medellin.png" alt="Ilustración de PanelaTeam: bloques de panela y montañas de Medellín" width="420" height="420" />
+
+Ilustración generada para el equipo. [Archivo original](assets/panelateam-medellin.png) · [Procedencia e integridad](assets/README.md). El logo de Panela Stocks identifica la solución; la ilustración conserva la identidad del equipo.
+
+</details>
+
 ## Documentación
 
+- [Auditoría de integridad y marca](docs/audits/2026-09-12-integridad-y-marca.md): archivo original, fallo de CDN, evidencia inmutable y controles de assets.
 - [Producto y alcance de implementación](PRODUCT.md), [sistema de diseño](DESIGN.md) y [adopción en la demo](aidlc-docs/construction/U01-manifest-interface.md).
 - [PRD completo](specs/prd.md): 13 secciones de producto, requisitos y criterios de aceptación; borrador pendiente de revisión.
 - [Proceso HardcoreAI y AI-DLC](specs/process.md): fuentes consultadas, adaptación y estado de las aprobaciones.

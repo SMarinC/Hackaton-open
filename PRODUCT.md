@@ -65,6 +65,8 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 ## Brand Commitments
 
+La marca «Local en cuadro» proporcionada por el usuario se adapta en SVG en `public/brand/`: marco de video, toldo terracota y acento verde. El punto pertenece al dibujo del logo; no acredita una sesión ni una conexión activa. El nombre se conserva con espacio: **Panela Stocks**. La tipografía trazada pertenece solo a la marca; los controles siguen con fuentes de sistema.
+
 Nombre de la solución: **Panela Stocks**. Nombre del equipo: **PanelaTeam**. Ambos nombres están confirmados por el usuario. Usar «Panela Stocks» para el producto y «PanelaTeam» para su equipo desarrollador; conservar esta distinción en títulos, descripciones y materiales de presentación. `assets/panelateam-medellin.png` es una ilustración generada para la identidad de la hackathon, no una fotografía de integrantes; su procedencia está en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. Para regenerar la demo funcional se adopta la última versión de `DESIGN.md`, «La mesa de operación», como dirección de prototipo: papel cálido, tinta café, dos columnas y fuentes de sistema sin Google Fonts. Esto no acredita una identidad comercial completa aprobada.
 
 ## Evidence on Hand

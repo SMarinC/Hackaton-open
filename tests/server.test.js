@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { Readable } from "node:stream";
 import { randomUUID } from "node:crypto";
+import { DatabaseSync } from "node:sqlite";
 import { createStore, ApiError } from "../server/store.js";
 import { createHandler } from "../server/index.js";
 import {
@@ -84,6 +85,7 @@ test("case and outbox survive reopen; duplicate frames never create extra messag
   let store = createStore({ filename });
   try {
     const first = store.ingest(event());
+    assert.equal(first.case.source_integrity, "opening_event_v1");
     assert.equal(first.case.inventory.status, "unknown");
     assert.equal(first.case.status, "review_required");
     assert.equal(store.ingest(event()).duplicate, true);
@@ -91,13 +93,15 @@ test("case and outbox survive reopen; duplicate frames never create extra messag
       event({ event_id: "event-2", duration_s: 9, media_time_s: 12 }),
     );
     assert.equal(later.case.id, first.case.id);
+    assert.deepEqual(later.case.source, first.case.source);
     assert.equal(store.listOutbox().length, 1);
     assert.equal(store.listOutbox()[0].intent, "ask_review");
     assert.match(store.listOutbox()[0].text, /no demuestra faltante/);
+    assert.match(store.listOutbox()[0].text, /^\[DEMO Panela Stocks ·/);
     store.close();
     store = createStore({ filename });
     assert.equal(store.listCases()[0].id, first.case.id);
-    assert.equal(store.listCases()[0].source.duration_s, 9);
+    assert.deepEqual(store.listCases()[0].source, first.case.source);
     assert.equal(store.ingest(event()).duplicate, true);
     assert.equal(store.listOutbox().length, 1);
     assert.notEqual(
@@ -106,6 +110,91 @@ test("case and outbox survive reopen; duplicate frames never create extra messag
     );
   } finally {
     store.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("later event payloads persist without rewriting opening evidence or a terminal case", () => {
+  const dir = mkdtempSync(join(tmpdir(), "panela-evidence-"));
+  const filename = join(dir, "test.sqlite");
+  let store = createStore({ filename });
+  let inspection;
+  try {
+    const firstEvent = event({
+      visit_id: "track-1:visit-1",
+      detector: "fixture-detector",
+      threshold_s: 5,
+      zone_polygon: [[0, 0], [1, 0], [1, 1]],
+    });
+    const laterEvent = {
+      ...firstEvent, event_id: "event-2", media_time_s: 12,
+      duration_s: 9, confidence: 0.3,
+    };
+    const lateEvent = {
+      ...firstEvent, event_id: "event-3", media_time_s: 22,
+      duration_s: 20, confidence: 0.2,
+    };
+    const first = store.ingest(firstEvent).case;
+    assert.deepEqual(store.ingest(laterEvent).case, first);
+    const discarded = observe(store, first.id, {
+      kind: "no_issue", note: "Caso de prueba sin incidencia.",
+    }).case;
+    const queued = store.listOutbox();
+    assert.deepEqual(store.ingest(lateEvent).case, discarded);
+    assert.deepEqual(store.listOutbox(), queued);
+    assert.equal(store.ingest(lateEvent).duplicate, true);
+    store.close();
+    store = createStore({ filename });
+    assert.deepEqual(store.getCase(first.id), discarded);
+    inspection = new DatabaseSync(filename, { readOnly: true });
+    const rows = inspection.prepare("SELECT case_id, payload FROM events ORDER BY rowid").all();
+    assert.deepEqual(rows.map((row) => row.case_id), [first.id, first.id, first.id]);
+    assert.deepEqual(rows.map((row) => JSON.parse(row.payload)), [firstEvent, laterEvent, lateEvent]);
+  } finally {
+    inspection?.close();
+    store.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("legacy event migration preserves cases and hashes without fabricating missing payloads", () => {
+  const dir = mkdtempSync(join(tmpdir(), "panela-evidence-migration-"));
+  const filename = join(dir, "test.sqlite");
+  let store = createStore({ filename });
+  let legacy;
+  let inspection;
+  try {
+    const original = store.ingest(event()).case;
+    const queued = store.listOutbox();
+    store.close();
+    store = null;
+    legacy = new DatabaseSync(filename);
+    legacy.exec("ALTER TABLE events DROP COLUMN payload");
+    const legacyCase = { ...original };
+    delete legacyCase.source_integrity;
+    legacy.prepare("UPDATE cases SET data = ? WHERE id = ?").run(JSON.stringify(legacyCase), original.id);
+    const oldRows = legacy.prepare("SELECT * FROM events").all();
+    legacy.close();
+    legacy = null;
+    store = createStore({ filename });
+    assert.deepEqual(store.getCase(original.id), legacyCase);
+    assert.equal(Object.hasOwn(store.getCase(original.id), "source_integrity"), false);
+    assert.deepEqual(store.listOutbox(), queued);
+    assert.equal(store.ingest(event()).duplicate, true);
+    const next = event({ event_id: "post-migration", media_time_s: 12, duration_s: 9 });
+    assert.deepEqual(store.ingest(next).case, legacyCase);
+    inspection = new DatabaseSync(filename, { readOnly: true });
+    const rows = inspection.prepare("SELECT * FROM events ORDER BY rowid").all();
+    assert.equal(rows.length, 2);
+    assert.deepEqual({ ...rows[0] }, { ...oldRows[0], payload: null });
+    assert.deepEqual(JSON.parse(rows[1].payload), { ...next, visit_id: "legacy" });
+    const newCase = store.ingest(event({ run_id: "post-migration-run" })).case;
+    assert.equal(newCase.source_integrity, "opening_event_v1");
+    assert.equal(Object.hasOwn(store.getCase(original.id), "source_integrity"), false);
+  } finally {
+    inspection?.close();
+    legacy?.close();
+    store?.close();
     rmSync(dir, { recursive: true, force: true });
   }
 });
@@ -381,9 +470,9 @@ test("restock requires assigned task and note; human closure is explicit and ter
   );
   const old = store.listOutbox().find((item) => item.intent === "ask_review");
   assert.equal(old.status, "cancelled");
-  assert.equal(
-    store.ingest(event({ event_id: "event-late" })).case.status,
-    "closed",
+  assert.deepEqual(
+    store.ingest(event({ event_id: "event-late", media_time_s: 22, duration_s: 20, confidence: 0.2 })).case,
+    closed.case,
   );
 });
 

@@ -15,5 +15,7 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run check:assets
       - run: npm test
       - run: npm run build
+      - run: npm run check:assets -- --built
