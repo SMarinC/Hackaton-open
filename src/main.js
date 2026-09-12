@@ -107,6 +107,7 @@ function resetTracking(reason) {
   tracker.reset();
   runId = crypto.randomUUID();
   latest = { tracks: [], zoneStats: [] };
+  latestShelfOccupancy = [];
   renderObservations();
   draw();
   if (reason) $("model-status").textContent = reason;
