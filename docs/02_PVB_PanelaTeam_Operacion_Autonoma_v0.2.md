@@ -40,7 +40,7 @@ Segmento confirmado: tiendas de abarrotes con secciones distinguibles. Primer pi
 | Propietario / operaciones | Decide contratar según reducción de coordinación, costo y utilidad comprobada |
 | Administrador | Conecta fuentes, identidades y canales; no obtiene por ello facultades comerciales |
 
-El veto de confianza puede estar en propietario, operaciones o quien autoriza acceso a cámaras/datos. Falta identificarlo. **Slack se elige para la demostración por solicitud del usuario; su adopción habitual por este segmento no está probada.** Correo permite representar relación con un tercero. El piloto deberá adaptarse al canal que efectivamente use la tienda, conservando el mismo caso y reglas.
+El veto de confianza puede estar en propietario, operaciones o quien autoriza acceso a cámaras/datos. Falta identificarlo. **Slack y correo son obligatorios como canales de la demostración: cumplen el requisito de que el agente sea adaptativo, al responder y actuar sobre eventos externos reales en más de un canal, y el requisito del concurso de integración con el entorno.** Correo permite representar relación con un tercero. El piloto deberá adaptarse al canal que efectivamente use la tienda, conservando el mismo caso y reglas.
 
 ## 3. Ventaja defendible principal
 
