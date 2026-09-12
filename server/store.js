@@ -104,10 +104,19 @@ export function createStore({
     PRAGMA foreign_keys=ON;
     PRAGMA busy_timeout=5000;
     CREATE TABLE IF NOT EXISTS cases (id TEXT PRIMARY KEY, episode_key TEXT NOT NULL UNIQUE, data TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS events (event_key TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, case_id TEXT NOT NULL REFERENCES cases(id));
+    CREATE TABLE IF NOT EXISTS events (event_key TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, case_id TEXT NOT NULL REFERENCES cases(id), payload TEXT);
     CREATE TABLE IF NOT EXISTS observations (request_key TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES cases(id), fingerprint TEXT);
     CREATE TABLE IF NOT EXISTS outbox (id TEXT PRIMARY KEY, operation_key TEXT NOT NULL UNIQUE, case_id TEXT NOT NULL REFERENCES cases(id), data TEXT NOT NULL);
   `);
+  if (
+    !db
+      .prepare("PRAGMA table_info(events)")
+      .all()
+      .some((column) => column.name === "payload")
+  ) {
+    // Legacy fingerprints cannot reconstruct the original evidence. Leave payload NULL.
+    db.exec("ALTER TABLE events ADD COLUMN payload TEXT");
+  }
   if (
     !db
       .prepare("PRAGMA table_info(observations)")
@@ -144,7 +153,7 @@ export function createStore({
     item.timeline.push({ id: randomUUID(), at: now(), type, detail, source });
   };
   const messageText = (item, intent) => {
-    const title = `[DEMO PanelaTeam · ${item.id}] ${item.zone_name}`;
+    const title = `[DEMO Panela Stocks · ${item.id}] ${item.zone_name}`;
     const provenance = `Fuente de video: ${item.source.source_id}; ejecución ${item.source.run_id}; t=${item.source.media_time_s}s. Inventario de demostración, no POS real.`;
     const body = {
       ask_review: `Se observó permanencia en esta sección durante ${item.source.duration_s.toFixed(1)} s. Revisa la sección y confirma si hay alguna situación que atender. La permanencia no demuestra faltante, compra ni problema.`,
@@ -273,6 +282,7 @@ export function createStore({
               mode: "video_replay",
               provenance: "browser_detection_event",
             },
+            source_integrity: "opening_event_v1",
             inventory: {
               status: inventoryFixture,
               source: "fixture",
@@ -302,20 +312,11 @@ export function createStore({
             JSON.stringify(item),
           );
           enqueue(item, "slack", "ask_review");
-        } else {
-          // Further frames of this visit enrich the same case, including after its closure.
-          item.source.duration_s = Math.max(
-            item.source.duration_s,
-            event.duration_s,
-          );
-          item.updated_at = now();
-          saveCase(item);
         }
-        db.prepare("INSERT INTO events VALUES (?, ?, ?)").run(
-          eventKey,
-          fingerprint,
-          item.id,
-        );
+        // Each validated event retains its own evidence; the case source is its opening event.
+        db.prepare(
+          "INSERT INTO events (event_key, fingerprint, case_id, payload) VALUES (?, ?, ?, ?)",
+        ).run(eventKey, fingerprint, item.id, JSON.stringify(event));
         return { case: item, duplicate: false, created };
       });
     },

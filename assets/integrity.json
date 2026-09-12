@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "algorithm": "sha256",
+  "assets": [
+    {
+      "path": "assets/panelateam-medellin.png",
+      "size_bytes": 2748537,
+      "sha256": "e2ba2afa2dd12dcaa05737acc840e234df3f6aa5d6938caa4b71fbc702e8e314"
+    },
+    {
+      "path": "public/brand/panela-stocks-logo.svg",
+      "size_bytes": 22543,
+      "sha256": "855483f743527b4d704586afd0ab87bf97bf07ed72c92bc0541d89dea8a62353"
+    },
+    {
+      "path": "public/brand/panela-stocks-logo-inverse.svg",
+      "size_bytes": 22543,
+      "sha256": "bc06cef07dc0fe314b421965c4cef99f46c663fe5e2763d5f21e444646e72d64"
+    },
+    {
+      "path": "public/brand/panela-stocks-icon.svg",
+      "size_bytes": 509,
+      "sha256": "734d01a778da4485375035ac4fc4d3b8c3fe0a7d73733b2081e0be72c3b7edda"
+    }
+  ]
+}

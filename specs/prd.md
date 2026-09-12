@@ -2,6 +2,8 @@
 
 **Versión 0.2 · 12 de septiembre de 2026 · Borrador completo con adenda de construcción por video**
 
+**Arquitectura objetivo añadida el 2026-09-12:** el usuario pidió documentar agentes, comunicaciones, contenedores multicloud y alternativas de proveedores. El [diseño objetivo](../docs/architecture/target.md) separa capacidades actuales, OpenRouter para inferencia, Exa para búsqueda web, despliegue portable y controles de comunicación. Es una dirección de diseño, no una selección de proveedor, despliegue o aceptación de D0.
+
 **Adenda 2026-09-12:** el usuario priorizó análisis temporal de video y pidió iniciar código; también pidió incorporar el cambio remoto `613ce94`, que reafirma Slack y correo obligatorios. Se construye la unidad U01: COCO-SSD local → seguimiento por zonas → evento de permanencia → revisión de sección → caso persistente y salida pendiente. El [README](../README.md) registra lo ejecutable y sus límites. Una confirmación local prueba transiciones; no satisface FR-08 ni acredita autonomía completa. Los requisitos D0 se conservan y su aceptación sigue pendiente.
 
 | Campo | Estado |

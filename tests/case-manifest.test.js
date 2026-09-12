@@ -468,3 +468,14 @@ test("real state path preserves a return from supplier query to assigned before 
   );
   assert.match(path, /data-case-state="closed" aria-current="step"/);
 });
+
+
+test("legacy evidence is disclosed without treating source integrity as detector accuracy", () => {
+  const legacy = renderCase(base());
+  assert.match(legacy, /Registro anterior al control de integridad/);
+  assert.match(legacy, /No usar como evidencia temporal validada/);
+  const current = renderCase(base({ source_integrity: "opening_event_v1" }));
+  assert.doesNotMatch(current, /Registro anterior al control de integridad/);
+  assert.match(current, /no es exactitud validada/);
+  assert.match(current, /Permanencia registrada/);
+});

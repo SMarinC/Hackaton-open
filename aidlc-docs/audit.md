@@ -87,3 +87,11 @@ El usuario confirmó que el equipo se llama **PanelaTeam** y corrigió el nombre
 Se actualizaron README, PRODUCT, DESIGN, PVB vigente/resumen, PRD, método y registros de Inception. El PVB v0.1 y las investigaciones conservan su contenido histórico con notas que aclaran la identidad actual. Se mantienen las rutas y la ilustración del equipo. El cambio es documental y no modifica capacidades, requisitos ni código de la demo.
 
 Verificación: revisión independiente sin hallazgos bloqueantes, 145 destinos de enlaces locales comprobados en 21 documentos Markdown, bloques de código equilibrados y `git diff --check` sin errores. La publicación se tramita por PR con las comprobaciones de CI; el resultado de la fusión queda registrado en GitHub.
+
+## 2026-09-12 20:02:43 UTC — Auditoría de integridad y logo Panela Stocks
+
+El usuario pidió auditar el repositorio, investigar la imagen publicada e integrar el logo aportado. La comprobación remota/local descartó una diferencia de bytes; Chrome reprodujo un 503 del CDN. Se conserva el PNG original y se incorpora una adaptación SVG de la marca en README, app y reporte.
+
+Se corrigió la mutación silenciosa de evidencia inicial por eventos posteriores, con payloads separados, migración aditiva y advertencia para históricos sin procedencia recuperable. La base pasó integrity_check y foreign_key_check; se creó copia privada antes de reiniciar la demo. Pasaron 56 pruebas, build y control de 4 assets más 3 copias. El informe reproducible está en [auditoría de integridad y marca](../docs/audits/2026-09-12-integridad-y-marca.md).
+
+Durante esta revisión el usuario añadió la arquitectura objetivo con agentes, comunicaciones, contenedores multicloud y OpenRouter/Exa. Se incorporó [target.md](../docs/architecture/target.md) con diagramas, estado actual frente a objetivo, controles de autonomía y fases. Las fuentes oficiales distinguen OpenRouter como enrutamiento de inferencia y Exa como búsqueda/investigación. No se contrató infraestructura ni se conectaron proveedores.

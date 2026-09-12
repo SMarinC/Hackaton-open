@@ -543,7 +543,7 @@ $("export").addEventListener("click", () => {
   );
   const link = document.createElement("a");
   link.href = url;
-  link.download = `panelateam-evidence-${new Date().toISOString().slice(0, 10)}.json`;
+  link.download = `panela-stocks-evidence-${new Date().toISOString().slice(0, 10)}.json`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });

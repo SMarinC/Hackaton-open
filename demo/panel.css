@@ -22,6 +22,7 @@ body { background: var(--page-bg); color: var(--ink); }
 ::selection { background: var(--ink); color: var(--paper); }
 
 a { color: var(--accent); }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 [hidden] { display: none !important; }
 
 .topbar {
@@ -43,15 +44,11 @@ a { color: var(--accent); }
   font-weight: 700;
   letter-spacing: -0.025em;
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 31px;
-  height: 31px;
-  background: var(--accent);
-  color: var(--paper);
-  border-radius: 7px;
-  font-size: 1.2rem;
+.brand-logo {
+  display: block;
+  width: 200px;
+  height: auto;
+  flex: 0 0 auto;
 }
 .brand-sub {
   border-left: 1px solid var(--line);
@@ -95,6 +92,7 @@ p { line-height: 1.5; margin: 0; }
   margin: 24px 0;
 }
 .disclosure a { color: var(--accent); }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .disclosure strong { color: var(--ink); }
 
 .case {
@@ -221,7 +219,8 @@ p { line-height: 1.5; margin: 0; }
 }
 
 @media (max-width: 620px) {
-  .topbar { padding: 0 20px; }
+  .topbar { height: auto; min-height: 70px; padding: 12px 20px; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .brand-sub { display: none; }
   main { padding: 24px 20px 40px; }
   .case-head { flex-direction: column; }
   .tl-row { grid-template-columns: 1fr; gap: 4px; }

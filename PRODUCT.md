@@ -14,6 +14,10 @@ web
 
 Frontend funcional en JavaScript/Vite y backend Node.js con SQLite (`src/`, `server/`, `vite.config.js`; ver `package.json`). **`index.html` + `src/main.js` es la interfaz operativa** del recorrido video → detección COCO-SSD → zonas → eventos → casos persistentes → outbox Slack/correo. Adopta la última dirección de `DESIGN.md`, «La mesa de operación»: dos columnas de trabajo para video y casos, con cronología de los casos del backend y tipografía de sistema sin cargar webfonts. `demo/panel.html` es una superficie secundaria estática con ejemplos ficticios; no consume los casos de la API ni acredita comunicaciones o ejecuciones reales. La app funcional requiere el entorno de ejecución y build descrito en `README.md`.
 
+## Target Architecture
+
+La [arquitectura objetivo](docs/architecture/target.md) distribuye responsabilidades lógicas entre percepción, coordinación, verificación y reportes; el motor de política y la persistencia delimitan efectos externos. API y workers se empaquetarán en contenedores OCI portables. Se propone una nube inicial y restauración ensayada en otra, con un único despachador autorizado. OpenRouter es candidato para inferencia intercambiable; Exa es una herramienta web opcional, no un sustituto de inventario ni un gateway de inferencia equivalente. Estos componentes siguen propuestos, sin despliegue ni conexión acreditados.
+
 ## Users
 
 - **Encargado de tienda** (usuario principal del demo): revisa una señal temporal, entiende su evidencia, revisa el resumen/reporte del caso, y configura o acepta las reglas de operación (la "política"). Fuente: PRD §§3, 6, 7.
@@ -64,6 +68,8 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 **Pendiente/no decidido (no inventar):** reconciliar el ciclo implementado con el vocabulario PVB, evaluación anotada reservada del detector (FR-01/02/03/04), directorio real de responsables (FR-06/07/09), validación del ciclo de reposición con una tienda real, cuentas de prueba de Slack/correo y sus conexiones (U02), tienda piloto y presupuesto. El video de referencia y el recorrido local de revisión por permanencia ya están elegidos. Evidencia de implementación parcial: `aidlc-docs/construction/U01-video-operations.md`.
 
 ## Brand Commitments
+
+La marca «Local en cuadro» proporcionada por el usuario se adapta en SVG en `public/brand/`: marco de video, toldo terracota y acento verde. El punto pertenece al dibujo del logo; no acredita una sesión ni una conexión activa. El nombre se conserva con espacio: **Panela Stocks**. La tipografía trazada pertenece solo a la marca; los controles siguen con fuentes de sistema.
 
 Nombre de la solución: **Panela Stocks**. Nombre del equipo: **PanelaTeam**. Ambos nombres están confirmados por el usuario. Usar «Panela Stocks» para el producto y «PanelaTeam» para su equipo desarrollador; conservar esta distinción en títulos, descripciones y materiales de presentación. `assets/panelateam-medellin.png` es una ilustración generada para la identidad de la hackathon, no una fotografía de integrantes; su procedencia está en `assets/README.md`. Voz operativa, clara y precisa (PRD §6): cada estado explica qué pasó y cómo continuar. Para regenerar la demo funcional se adopta la última versión de `DESIGN.md`, «La mesa de operación», como dirección de prototipo: papel cálido, tinta café, dos columnas y fuentes de sistema sin Google Fonts. Esto no acredita una identidad comercial completa aprobada.
 
