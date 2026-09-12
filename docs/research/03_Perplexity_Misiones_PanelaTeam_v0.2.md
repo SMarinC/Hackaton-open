@@ -1,5 +1,7 @@
 # PanelaTeam v0.2 — paquete de investigación para Perplexity
 
+> **Nota de identidad — 2026-09-12:** la solución del equipo **PanelaTeam** se llama **Panela Stocks**. Los prompts siguientes se conservan como antecedente; al reutilizarlos, aplicar Panela Stocks a las referencias al producto y PanelaTeam a las del equipo.
+
 **Estado: misiones NO ejecutadas.** Preparado el 12 de septiembre de 2026. No se ha enviado este contenido a Perplexity, conectado cuentas ni contactado terceros. Estas investigaciones complementan la revisión del PVB; no bloquean la corrección de su autonomía operativa ni sustituyen pruebas del producto.
 
 La prioridad es **M1: material demostrable**, seguida de **M3: viabilidad de integración** y **M2: comprador y diferenciación**. Pueden ejecutarse en paralelo. Para cada conversación nueva, pega primero el system prompt y después una misión completa. Adjunta las versiones del PVB y PRD que quieras contrastar, identificando su versión.

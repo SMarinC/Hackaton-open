@@ -1,5 +1,7 @@
 # PanelaTeam — revisión del video y ajustes propuestos al PVB
 
+> **Nota de identidad — 2026-09-12:** **PanelaTeam** identifica al equipo y **Panela Stocks** a la solución. Esta revisión conserva su contexto de construcción original.
+
 **12 de septiembre de 2026 · Decisión de construcción, pendiente de validación funcional.** Esta revisión incorpora el nuevo prompt de visión y el video indicado por el equipo. El objetivo inmediato es construir detección local de personas, seguimiento temporal y eventos por zona que alimenten casos persistentes. No acredita un MVP terminado, conexiones externas ni resultados de negocio.
 
 ## Evidencia visual y procedencia

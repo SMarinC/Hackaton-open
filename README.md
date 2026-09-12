@@ -1,8 +1,8 @@
-# PanelaTeam · Operación de tiendas de abarrotes
+# Panela Stocks · Operación de tiendas de abarrotes
 
 ![PanelaTeam en las montañas de Medellín](assets/panelateam-medellin.png)
 
-Proyecto de PanelaTeam para **Agents, Everywhere**, AI Tinkerers Medellín, septiembre de 2026.
+**Panela Stocks** es la solución desarrollada por el equipo **PanelaTeam** para **Agents, Everywhere**, AI Tinkerers Medellín, septiembre de 2026.
 
 **Estado: demo funcional de video con una mesa de operación y casos trazables.** Detector local, seguimiento por zonas, permanencia, eventos y casos persistentes. Slack y correo siguen siendo obligatorios para la demo completa; este incremento tiene adaptadores salientes sin conectar y no implementa todavía respuestas entrantes.
 
@@ -15,7 +15,7 @@ npm ci
 npm run dev
 ```
 
-Abre [PanelaTeam local](http://127.0.0.1:5173). Pulsa **Analizar video**. La referencia CCTV del usuario ya está configurada; también puedes abrir un MP4/WebM local compatible con el navegador. No se descarga un video al repositorio ni se extraen píxeles de un iframe de YouTube.
+Abre [Panela Stocks local](http://127.0.0.1:5173). Pulsa **Analizar video**. La referencia CCTV del usuario ya está configurada; también puedes abrir un MP4/WebM local compatible con el navegador. No se descarga un video al repositorio ni se extraen píxeles de un iframe de YouTube.
 
 1. Observa cajas, recorridos e IDs temporales sobre el video.
 2. El umbral inicial de ocho segundos abre una revisión de sección. Es configuración exploratoria, no un umbral validado con tiendas.

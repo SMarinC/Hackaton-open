@@ -79,3 +79,11 @@ Se integró el nuevo commit y se regeneró la mesa con video y caso simultáneos
 La revisión del nuevo panel estático detectó afirmaciones de casos/cola reales, una fotografía inexistente, mensajes anteriores sin cancelar y una tarea inventada en la rama sin stock. Se corrigieron como ejemplos explícitamente ficticios que respetan las reglas del backend. El reporte y su CSS ahora entran en el build multipágina; el handler de producción devuelve 200 y MIME correcto para ambos. Los enlaces documentales apuntan a GitHub.
 
 Verificación final: 53 pruebas aprobadas, build correcto y controles funcionales preservados. Se comprobó visualmente en Chrome la mesa de dos columnas, el caso cerrado conservado, su recorrido `Revisión → Reposición asignada → Cierre humano`, el salto a 00:17.0 y el ciclo objetivo con etapas sin registro explícitas. Las cuentas externas siguen pendientes y no se hicieron envíos. La adaptación móvil se implementó en CSS; esta captura no declara una auditoría de dispositivo ni certificación de accesibilidad.
+
+## 2026-09-12 19:47:12 UTC — Nombre de la solución confirmado
+
+El usuario confirmó que el equipo se llama **PanelaTeam** y corrigió el nombre de la solución a **Panela Stocks**. Después solicitó actualizar los documentos y fusionar el cambio en GitHub. Esta decisión sustituye el campo «nombre comercial pendiente» del PVB y del PRD.
+
+Se actualizaron README, PRODUCT, DESIGN, PVB vigente/resumen, PRD, método y registros de Inception. El PVB v0.1 y las investigaciones conservan su contenido histórico con notas que aclaran la identidad actual. Se mantienen las rutas y la ilustración del equipo. El cambio es documental y no modifica capacidades, requisitos ni código de la demo.
+
+Verificación: revisión independiente sin hallazgos bloqueantes, 145 destinos de enlaces locales comprobados en 21 documentos Markdown, bloques de código equilibrados y `git diff --check` sin errores. La publicación se tramita por PR con las comprobaciones de CI; el resultado de la fusión queda registrado en GitHub.
