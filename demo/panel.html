@@ -3,245 +3,200 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PanelaTeam — Manifiesto de casos</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<meta name="theme-color" content="#f5f1e9" />
+<title>PanelaTeam — Reporte de caso</title>
 <link rel="stylesheet" href="panel.css" />
 </head>
 <body>
 <!--
-THESIS: A case reads as one auditable manifest a store manager already
-trusts, topped by an unmistakable status spine — refusing the SaaS-dashboard
-default of scattered KPI cards and color pills that reads as analytics, not
-accountability.
-OWN-WORLD: kraft-paper ground, carbon ink, functional stamp accents only
-(red=bloqueado, green=verificado); IBM Plex Mono for data, IBM Plex Sans for
-prose; ruled manifest rows, legend-free ink-stamp icons, a left-edge channel
-lane (Slack/correo) inside one continuous log.
-STORY: glance at the spine to know the case's stage; read the manifest rows
-below to verify exactly who answered, on which channel, and what evidence
-closed it.
-FIRST VIEWPORT: case header (tienda, ID, producto) → 7-stage status spine →
-manifest log rows begin, lane glyphs left, tabular timestamps/stamps right.
-FORM: fused direction — assigned candidate 5 (manifiesto de bodega) as
-owning world, raised with candidate 1's (timeline de rastreo) status-spine
-device per explicit fusion request, plus donations from declined
-challengers (legend-free stamps; single vertical spine; twin-channel lane
-symmetry). Seed key: 092519c2.
-FINISH: unreviewed and undocumented is unfinished; this build ends with the
-finish review, the verdict, and DESIGN.md.
+THESIS: Un caso se lee como una extensión impresa de la propia mesa de
+operación — mismo sistema, misma tinta café/papel — nunca un mundo visual
+aparte del producto real.
+OWN-WORLD: heredado íntegro de ../DESIGN.md, escaneado del código real
+(index.html + src/style.css): acento terracota oklch(47% .1 47), tags y
+tarjetas de borde-sin-sombra, eyebrow como patrón de jerarquía establecido,
+radios 5-10px, fuente de sistema sin webfont.
+STORY: cada caso muestra su camino de estado real (review_required →
+assigned|awaiting_delivery → closed|discarded), sus mensajes salientes con
+estado de entrega honesto (pending_connection, no un envío simulado), y la
+observación local que decidió la rama — sin inventar una respuesta de canal
+que el sistema todavía no recibe.
+FIRST VIEWPORT: topbar de marca compartida → encabezado con eyebrow →
+disclosure de datos ficticios → primer caso (ID, estado, camino, timeline).
+FORM: extensión de un mundo ya establecido (DESIGN.md real) — no se corrió
+concept-seed; new-work.md exime la extensión de un mundo existente del
+torneo de conceptos.
+FINISH: unreviewed and undocumented is unfinished; este build hereda la
+revisión de DESIGN.md y se verifica contra su craft floor antes de cerrar.
 -->
 
-<div class="watermark" aria-hidden="true">
-  <svg width="100%" height="100%">
-    <pattern id="wm" width="360" height="180" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)">
-      <text x="0" y="40" class="wm-text">MUESTRA · DATOS FICTICIOS</text>
-    </pattern>
-    <rect width="100%" height="100%" fill="url(#wm)" />
-  </svg>
-</div>
-
-<header class="masthead">
-  <div class="masthead-inner">
-    <span class="wordmark">PanelaTeam</span>
-    <span class="masthead-meta">Manifiesto de casos · Abarrotes La 14 · turno 12 sep</span>
-  </div>
+<header class="topbar">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">P</span>PanelaTeam
+    <span class="brand-sub">Reporte de caso</span>
+  </a>
+  <span class="build-tag">Prototipo · registro de coordinación</span>
 </header>
 
-<main class="sheet-stack">
-
-  <p class="disclosure">
-    Datos de inventario, contactos y ejecución: fixture de demostración. No hay cuentas de Slack ni correo conectadas todavía — ver <a href="../PRODUCT.md">PRODUCT.md</a>.
+<main>
+  <p class="eyebrow">REGISTRO DE COORDINACIÓN</p>
+  <h1>Casos de prueba, de punta a punta</h1>
+  <p class="lede">
+    Dos casos reales del pipeline (<a href="../index.html">ver la app en vivo</a>): misma señal de permanencia,
+    dos observaciones locales distintas → dos caminos distintos. Estados y textos tomados literalmente de
+    <code>server/store.js</code>, no inventados para este reporte.
   </p>
 
-  <!-- CASE A — stock disponible, ruta interna -->
-  <article class="case" data-state="verificado">
+  <p class="disclosure">
+    <strong>Datos de demostración.</strong> Video, inventario y contactos son fixtures — ver
+    <a href="../PRODUCT.md">PRODUCT.md</a>. Los mensajes de abajo están en cola real del sistema
+    (<code>outbox</code>) pero <strong>no se han enviado</strong>: no hay cuentas de Slack ni correo conectadas
+    todavía, así que su estado de entrega real es <em>pendiente de conexión</em>, mostrado tal cual — no se
+    simula un envío exitoso que todavía no ocurre.
+  </p>
+
+  <!-- CASE 1 — stock confirmed → assigned → closed -->
+  <article class="case">
     <div class="case-head">
-      <div class="case-subject">
-        <h1><span class="case-number">#0412</span> Faltante en exhibición — Aceite vegetal 1L</h1>
-        <p>Pasillo 3 · sección abarrotes secos · evidencia: clip de cámara con procedencia declarada</p>
+      <div>
+        <div class="case-id mono">caso · a1b2c3d4e5f6</div>
+        <h2>Pasillo 3 · Aceites y granos</h2>
       </div>
-      <div class="case-status stamp-verificado">
-        <svg viewBox="0 0 24 24" class="stamp-icon" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Verificado</span>
-      </div>
+      <span class="case-status status-closed">Cierre humano</span>
+    </div>
+    <p class="case-desc">Cierre confirmado por el operador local. No hay verificación visual posterior.</p>
+
+    <div class="path" aria-label="Camino de estado">
+      <span class="step reached">review_required</span>
+      <span class="arrow">→</span>
+      <span class="step reached">assigned</span>
+      <span class="arrow">→</span>
+      <span class="step final status-closed">closed</span>
     </div>
 
-    <ol class="spine" aria-label="Progreso del caso">
-      <li class="done"><span class="spine-label">Detectado</span></li>
-      <li class="done"><span class="spine-label">Validación</span></li>
-      <li class="done"><span class="spine-label">Propuesta</span></li>
-      <li class="done"><span class="spine-label">Aprobado</span></li>
-      <li class="done"><span class="spine-label">Asignado</span></li>
-      <li class="done"><span class="spine-label">Ejecución</span></li>
-      <li class="done current"><span class="spine-label">Verificado</span></li>
-    </ol>
-
-    <table class="manifest">
-      <caption class="sr-only">Registro cronológico del caso #0412</caption>
-      <thead>
-        <tr>
-          <th scope="col" class="col-lane"><span class="sr-only">Canal</span></th>
-          <th scope="col" class="col-time">Hora</th>
-          <th scope="col" class="col-entry">Entrada</th>
-          <th scope="col" class="col-mark"><span class="sr-only">Estado</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">09:14</td>
-          <td class="col-entry"><strong>Evento</strong>: posible faltante detectado, evidencia suficiente</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">09:15</td>
-          <td class="col-entry"><strong>Consulta</strong>: stock fixture verificado por el agente</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">09:16</td>
-          <td class="col-entry"><strong>Hilo abierto</strong>: @reposicion, disponibilidad en bodega</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark pending"><rect x="3" y="3" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">09:41</td>
-          <td class="col-entry"><strong>Respuesta</strong>: «hay 6 unidades en bodega» — @reposicion</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">10:05</td>
-          <td class="col-entry"><strong>Tarea asignada</strong>: reposición interna #A-118, bajo política vigente</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr class="retry-row">
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">10:07</td>
-          <td class="col-entry">
-            <svg viewBox="0 0 16 16" class="retry-icon" aria-hidden="true"><path d="M13 3v4h-4M3 13V9h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 8a4.5 4.5 0 0 1 7.6-3.2M12.5 8a4.5 4.5 0 0 1-7.6 3.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            <strong>Reintento de aprobación</strong>: misma tarea #A-118 conservada, sin duplicar
-          </td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">14:30</td>
-          <td class="col-entry"><strong>Ejecución reportada</strong>: evidencia posterior comprobada, encargado confirma</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <footer class="case-foot">
-      <span class="report-line">
-        Reporte enviado —
-        <span class="chan-ok"><svg viewBox="0 0 16 16" class="chan-icon"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Slack</span>
-        <span class="chan-ok"><svg viewBox="0 0 16 16" class="chan-icon"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Correo</span>
-      </span>
-      <span class="closure-note">Cierre: mercancía disponible en bodega; sin consulta a proveedor.</span>
-    </footer>
-  </article>
-
-  <!-- CASE B — sin stock, ruta a proveedor por correo -->
-  <article class="case" data-state="asignado">
-    <div class="case-head">
-      <div class="case-subject">
-        <h1><span class="case-number">#0413</span> Faltante en exhibición — Panela redonda 500g</h1>
-        <p>Pasillo 1 · sección abarrotes básicos · evidencia: clip de cámara con procedencia declarada</p>
+    <div class="timeline">
+      <div class="tl-row">
+        <span class="tl-time mono">t=41.2s</span>
+        <div class="tl-body">
+          <strong>Evento de permanencia</strong> — 9.4 s observados en la sección, detector local (sin transmitir píxeles a servicios externos).
+          <div class="message">
+            <div class="message-meta">
+              <span><span class="channel">Slack</span> · <span class="intent">Revisar sección</span></span>
+              <span class="delivery-status pending">Pendiente de conexión</span>
+            </div>
+            <p class="message-text">[DEMO PanelaTeam · a1b2c3d4e5f6] Pasillo 3 · Aceites y granos
+Se observó permanencia en esta sección durante 9.4 s. Revisa la sección y confirma si hay alguna situación que atender. La permanencia no demuestra faltante, compra ni problema.
+Fuente de video: cctv-referencia; ejecución run-0412; t=41.2s. Inventario de demostración, no POS real.</p>
+          </div>
+        </div>
       </div>
-      <div class="case-status stamp-progreso">
-        <svg viewBox="0 0 24 24" class="stamp-icon spin-slow" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/></svg>
-        <span>En seguimiento</span>
+      <div class="tl-row">
+        <span class="tl-time mono">local</span>
+        <div class="tl-body">
+          <div class="observation">
+            <span class="obs-label">OBSERVACIÓN LOCAL — no es una respuesta de canal</span>
+            <p>Faltante confirmado; hay stock en bodega. <em>shelf_issue_confirmed = true</em>. Nota: "Estante vacío confirmado, 6 unidades disponibles en bodega según fixture de inventario."</p>
+          </div>
+          <div class="message" style="margin-top:8px">
+            <div class="message-meta">
+              <span><span class="channel">Slack</span> · <span class="intent">Asignar reposición</span></span>
+              <span class="delivery-status pending">Pendiente de conexión</span>
+            </div>
+            <p class="message-text">El operador local confirmó una incidencia de exhibición y stock disponible para la gestión de prueba. Tarea interna asignada: revisar y efectuar la reposición indicada por el responsable. No se ha inferido producto ni cantidad desde el video.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-time mono">local</span>
+        <div class="tl-body">
+          <div class="observation">
+            <span class="obs-label">OBSERVACIÓN LOCAL — no es una respuesta de canal</span>
+            <p>Reposición realizada. Nota: "Estante repuesto, evidencia fotográfica local adjunta al caso."</p>
+          </div>
+          <div class="message" style="margin-top:8px">
+            <div class="message-meta">
+              <span><span class="channel">Slack</span> · <span class="intent">Reporte de estado</span></span>
+              <span class="delivery-status pending">Pendiente de conexión</span>
+            </div>
+            <p class="message-text">Estado del caso: closed. Cierre por confirmación del operador local; sin verificación visual posterior. Nota: Estante repuesto, evidencia fotográfica local adjunta al caso. Respuestas reales Slack/correo todavía no integradas.</p>
+          </div>
+          <div class="message" style="margin-top:8px">
+            <div class="message-meta">
+              <span><span class="channel">Correo</span> · <span class="intent">Reporte de estado</span></span>
+              <span class="delivery-status pending">Pendiente de conexión</span>
+            </div>
+            <p class="message-text">Estado del caso: closed. Cierre por confirmación del operador local; sin verificación visual posterior. Nota: Estante repuesto, evidencia fotográfica local adjunta al caso. Respuestas reales Slack/correo todavía no integradas.</p>
+          </div>
+        </div>
       </div>
     </div>
-
-    <ol class="spine" aria-label="Progreso del caso">
-      <li class="done"><span class="spine-label">Detectado</span></li>
-      <li class="done"><span class="spine-label">Validación</span></li>
-      <li class="done"><span class="spine-label">Propuesta</span></li>
-      <li class="done"><span class="spine-label">Aprobado</span></li>
-      <li class="done current"><span class="spine-label">Asignado</span></li>
-      <li><span class="spine-label">Ejecución</span></li>
-      <li><span class="spine-label">Verificado</span></li>
-    </ol>
-
-    <table class="manifest">
-      <caption class="sr-only">Registro cronológico del caso #0413</caption>
-      <thead>
-        <tr>
-          <th scope="col" class="col-lane"><span class="sr-only">Canal</span></th>
-          <th scope="col" class="col-time">Hora</th>
-          <th scope="col" class="col-entry">Entrada</th>
-          <th scope="col" class="col-mark"><span class="sr-only">Estado</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">11:02</td>
-          <td class="col-entry"><strong>Evento</strong>: posible faltante detectado, evidencia suficiente</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">11:04</td>
-          <td class="col-entry"><strong>Hilo abierto</strong>: @reposicion, disponibilidad en bodega</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr class="branch-row">
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">11:20</td>
-          <td class="col-entry"><strong>Respuesta</strong>: «sin unidades en bodega» — @reposicion <em>(misma señal, respuesta distinta al caso #0412 → gestión distinta)</em></td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-correo" title="Correo">C</span></td>
-          <td class="col-time">11:22</td>
-          <td class="col-entry"><strong>Consulta</strong>: correo a proveedor de prueba, fecha de entrega</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-correo" title="Correo">C</span></td>
-          <td class="col-time">13:47</td>
-          <td class="col-entry"><strong>Respuesta</strong>: «entrega mañana 10am» — proveedor de prueba</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">13:50</td>
-          <td class="col-entry"><strong>Tarea asignada</strong>: recepción y reposición #A-119, fecha comprometida</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark done"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
-        </tr>
-        <tr>
-          <td class="col-lane"><span class="lane lane-slack" title="Slack">S</span></td>
-          <td class="col-time">—</td>
-          <td class="col-entry"><strong>Ejecución</strong>: pendiente de reporte tras entrega comprometida</td>
-          <td class="col-mark"><svg viewBox="0 0 16 16" class="mark pending"><rect x="3" y="3" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <footer class="case-foot">
-      <span class="report-line">
-        Reporte enviado —
-        <span class="chan-ok"><svg viewBox="0 0 16 16" class="chan-icon"><path d="M2 8.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Slack</span>
-        <span class="chan-pending">Correo — resumen al cierre</span>
-      </span>
-      <span class="closure-note">Sin cerrar: falta ejecución reportada y evidencia posterior.</span>
-    </footer>
   </article>
 
+  <!-- CASE 2 — no stock → awaiting_delivery (still open) -->
+  <article class="case">
+    <div class="case-head">
+      <div>
+        <div class="case-id mono">caso · f6e5d4c3b2a1</div>
+        <h2>Pasillo 1 · Abarrotes básicos</h2>
+      </div>
+      <span class="case-status status-open">Consulta a proveedor</span>
+    </div>
+    <p class="case-desc">Incidencia confirmada, sin stock. Consulta de entrega preparada; el caso sigue pendiente.</p>
+
+    <div class="path" aria-label="Camino de estado">
+      <span class="step reached">review_required</span>
+      <span class="arrow">→</span>
+      <span class="step final status-open">awaiting_delivery</span>
+      <span class="arrow">→</span>
+      <span class="step">closed</span>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-row">
+        <span class="tl-time mono">t=12.0s</span>
+        <div class="tl-body">
+          <strong>Evento de permanencia</strong> — 8.1 s observados en la sección, detector local.
+          <div class="message">
+            <div class="message-meta">
+              <span><span class="channel">Slack</span> · <span class="intent">Revisar sección</span></span>
+              <span class="delivery-status pending">Pendiente de conexión</span>
+            </div>
+            <p class="message-text">[DEMO PanelaTeam · f6e5d4c3b2a1] Pasillo 1 · Abarrotes básicos
+Se observó permanencia en esta sección durante 8.1 s. Revisa la sección y confirma si hay alguna situación que atender. La permanencia no demuestra faltante, compra ni problema.
+Fuente de video: cctv-referencia; ejecución run-0413; t=12.0s. Inventario de demostración, no POS real.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-time mono">local</span>
+        <div class="tl-body">
+          <div class="observation">
+            <span class="obs-label">OBSERVACIÓN LOCAL — misma señal, nota distinta → rama distinta</span>
+            <p>Faltante confirmado; no hay stock. <em>shelf_issue_confirmed = true</em>. Nota: "Estante vacío confirmado, bodega sin unidades según fixture de inventario."</p>
+          </div>
+          <div class="message" style="margin-top:8px">
+            <div class="message-meta">
+              <span><span class="channel">Correo</span> · <span class="intent">Consultar entrega</span></span>
+              <span class="delivery-status pending">Pendiente de conexión</span>
+            </div>
+            <p class="message-text">El operador local confirmó una incidencia de exhibición y ausencia de stock en este caso de prueba. ¿Hay una entrega prevista? Indica fecha y cualquier impedimento. Esta consulta no es un pedido ni un compromiso de compra.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-time mono">—</span>
+        <div class="tl-body">
+          <strong>Sin cerrar</strong> — falta respuesta de proveedor y ejecución reportada. La tarea interna quedó bloqueada (<span class="mono">blocked_no_stock</span>) hasta recibir fecha de entrega.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="colophon">
+    <span>PanelaTeam · AI Tinkerers Medellín — Agents, Everywhere</span>
+    <span>Ver <a href="../DESIGN.md">DESIGN.md</a> · <a href="../docs/02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md">PVB v0.2</a></span>
+  </div>
 </main>
-
-<footer class="colophon">
-  <span>PanelaTeam · AI Tinkerers Medellín — Agents, Everywhere</span>
-  <span>Ver <a href="../docs/02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md">PVB v0.2</a></span>
-</footer>
 
 </body>
 </html>

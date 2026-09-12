@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Server + static frontend in JS/Node (src/, server/, vite.config.js — see package.json) for the video/vision/case pipeline. The demo report panel (demo/panel.html) stays static HTML/CSS/JS: zero setup, zero build, opens directly in the browser given the ~3h hackathon budget.
+Server + static frontend in JS/Node (src/, server/, vite.config.js — see package.json). **`index.html` + `src/main.js` is the real, running product interface** (video → detección COCO-SSD → zonas → casos → outbox Slack/correo), servido por Vite/`server/index.js`. `demo/panel.html` es una superficie secundaria — un reporte de caso independiente y estático (HTML/CSS puro, sin build) que extiende el mismo sistema visual documentado en `DESIGN.md` (escaneado del código real, no al revés) para mostrar el recorrido completo de un caso fuera de la mesa de trabajo en vivo.
 
 ## Users
 
@@ -38,10 +38,11 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 - Segmento: tiendas de abarrotes con secciones diferenciadas. Piloto propuesto (no confirmado): una tienda con exhibición observable, encargado identificable, inventario consultable y responsable de reposición disponible.
 - Canales de coordinación **obligatorios para el demo (D0)**: Slack (hilo por caso, conversación operativa principal) y correo (contacto externo representado por cuenta de prueba). Una bandeja simulada no satisface el requisito D0.
-- Evidencia de entrada: video/cámara con procedencia declarada (clip de internet con condiciones de reutilización verificadas para el demo; sin reconocimiento facial, solo IDs temporales de seguimiento). El pipeline de video/tracking/vision ya tiene un primer incremento en código (src/vision.js, src/tracker.js, tests/).
+- Evidencia de entrada: video/cámara con procedencia declarada. **Ya hay una referencia CCTV real integrada** (`aidlc-docs/construction/U01-video-operations.md`); no es un placeholder pendiente. Sin reconocimiento facial, solo IDs temporales de seguimiento (COCO-SSD en navegador, sin transmitir píxeles a servicios externos).
 - Datos comerciales: POS, inventario y catálogo — fixtures ficticios para el demo, etiquetados como tales en cualquier reporte.
 - Política configurable: tienda, identidad, acciones admitidas, contactos, información compartible, límites, horario, recordatorios, escalamiento, vigencia y versión.
-- Ciclo de estados del caso: `detectado → en validación → propuesta → aprobado → asignado → ejecución reportada → verificado` (también `descartado`, `bloqueado`, `cancelado`, con motivo).
+- **Ciclo de estados implementado (código real, `server/store.js`):** `review_required → assigned | awaiting_delivery → closed | discarded`. Un evento de permanencia abre el caso en `review_required`; una observación local con `shelf_issue_confirmed=true` decide la rama (`stock_confirmed` → `assigned` → `closed`, o `no_stock` → `awaiting_delivery`, con la tarea interna en `blocked_no_stock` hasta recibir fecha).
+- **Ciclo de la visión PVB (aspiracional, no implementado):** `detectado → en validación → propuesta → aprobado → asignado → ejecución reportada → verificado` (también `descartado`, `bloqueado`, `cancelado`). No confundir con el ciclo implementado de arriba — son dos vocabularios distintos hasta que se reconcilien.
 - Concurso: AI Tinkerers Medellín, "Agents, Everywhere" — entrega requiere repositorio público, video de dos minutos y demás materiales del handbook. Candidatura aún no enviada.
 
 ## Capabilities and Constraints
@@ -54,7 +55,7 @@ Referencias de mercado citadas en el PVB (Focal, Trax/FORM) resuelven visión y 
 
 **Terminología del proyecto:** PVB = Product Vision Board; D0 = alcance obligatorio de la demo; "caso" = unidad de trabajo que agrupa evento, consultas, decisión y cierre; "política" = reglas de autonomía configuradas; "procedencia" = si un dato es captura real, reproducción de archivo, dato sintético o anotación humana.
 
-**Pendiente/no decidido (no inventar):** primer ciclo definitivo (reposición es el candidato, no confirmado por el equipo), clip de video concreto, cuentas de prueba de Slack/correo (aún no existen), tienda piloto, presupuesto.
+**Pendiente/no decidido (no inventar):** reconciliar el ciclo de estados implementado con el vocabulario PVB, evaluación anotada reservada del detector (FR-01-04), directorio real de responsables (FR-06/07/09), cuentas de prueba de Slack/correo (aún no existen — U02 pendiente), tienda piloto, presupuesto.
 
 ## Brand Commitments
 
@@ -63,7 +64,7 @@ Nombre de equipo: **PanelaTeam** — identidad confirmada (nombre comercial del 
 ## Evidence on Hand
 
 - **No hay cuentas de prueba de Slack ni correo conectadas todavía** (confirmado explícitamente por el usuario en el PVB v0.2) — es la dependencia de primera prioridad antes de poder demostrar el D0 real.
-- No hay video/cámara elegido; el demo usará material de internet con condiciones de reutilización verificadas, declarado como tal — no se presenta como captura propia.
+- Referencia de video CCTV ya integrada (ver `aidlc-docs/construction/U01-video-operations.md`); condiciones de reutilización y procedencia declaradas — no se presenta como captura propia.
 - Datos de POS/inventario serán fixtures ficticios, etiquetados como tales en cualquier reporte o UI.
 - No existen resultados de piloto, métricas operativas reales, ROI ni comparación causal — el PVB v0.2 prohíbe explícitamente publicar cifras inventadas o atribuciones causales indebidas.
 - La candidatura al concurso no ha sido enviada; el PRD/PVB documentado no acredita una nota de implementación.
