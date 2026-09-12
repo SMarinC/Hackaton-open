@@ -95,3 +95,11 @@ El usuario pidió auditar el repositorio, investigar la imagen publicada e integ
 Se corrigió la mutación silenciosa de evidencia inicial por eventos posteriores, con payloads separados, migración aditiva y advertencia para históricos sin procedencia recuperable. La base pasó integrity_check y foreign_key_check; se creó copia privada antes de reiniciar la demo. Pasaron 56 pruebas, build y control de 4 assets más 3 copias. El informe reproducible está en [auditoría de integridad y marca](../docs/audits/2026-09-12-integridad-y-marca.md).
 
 Durante esta revisión el usuario añadió la arquitectura objetivo con agentes, comunicaciones, contenedores multicloud y OpenRouter/Exa. Se incorporó [target.md](../docs/architecture/target.md) con diagramas, estado actual frente a objetivo, controles de autonomía y fases. Las fuentes oficiales distinguen OpenRouter como enrutamiento de inferencia y Exa como búsqueda/investigación. No se contrató infraestructura ni se conectaron proveedores.
+
+## 2026-09-12 20:16:11 UTC — Corrección de entrega de la ilustración original
+
+El usuario confirmó que la imagen rota era la ilustración de PanelaTeam del inicio. Se reprodujo el fallo del CDN tanto en la URL raw fijada a un commit como en la de main; la fijación anterior no resolvió la visualización. El PNG local conserva el SHA-256 registrado y no se regenera ni se modifica.
+
+Se cargó el archivo original como adjunto de GitHub mediante su selector nativo de archivos, sin cambiar permisos del navegador. La vista previa mostró la ilustración y decodificó 1254 × 1254 píxeles. Se actualiza el README con la URL estable del adjunto, conservando el archivo versionado, el manifiesto y la procedencia. La publicación y comprobación del README final se tramitan por PR y merge bajo la autorización previa del usuario.
+
+La PR #8 publicó el adjunto y permitió verificarlo sin autenticación: `200 image/png`, 2.748.537 bytes e igualdad byte por byte con el PNG local. Chrome mostró la imagen dentro del README de la rama, con dimensiones naturales de 1254 × 1254. La revisión independiente no encontró bloqueantes en el diff documental. `git diff --check` y el control de 4 assets originales más 3 copias de build pasaron; la fusión queda sujeta a las comprobaciones de CI del último commit.

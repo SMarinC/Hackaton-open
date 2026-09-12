@@ -77,7 +77,7 @@ Las comunicaciones rutinarias usan una política previa, sin aprobación por men
 <details>
 <summary>Ilustración de PanelaTeam en Medellín</summary>
 
-<img src="https://raw.githubusercontent.com/SMarinC/Hackaton-open/9965333089ac8db6aa835341e65daf5b5c602f9f/assets/panelateam-medellin.png" alt="Ilustración de PanelaTeam: bloques de panela y montañas de Medellín" width="420" height="420" />
+<img src="https://github.com/user-attachments/assets/7d92dfa2-2abc-4919-8c9b-512aa5b29dd5" alt="Ilustración de PanelaTeam: bloques de panela y montañas de Medellín" width="420" height="420" />
 
 Ilustración generada para el equipo. [Archivo original](assets/panelateam-medellin.png) · [Procedencia e integridad](assets/README.md). El logo de Panela Stocks identifica la solución; la ilustración conserva la identidad del equipo.
 
