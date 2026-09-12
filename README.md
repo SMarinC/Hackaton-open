@@ -4,7 +4,7 @@
 
 Proyecto de PanelaTeam para **Agents, Everywhere**, AI Tinkerers Medellín, septiembre de 2026.
 
-**Estado: primer incremento ejecutable de análisis de video.** Detector local, seguimiento por zonas, permanencia, eventos y casos persistentes. Slack y correo siguen siendo obligatorios para la demo completa; este incremento tiene adaptadores salientes sin conectar y no implementa todavía respuestas entrantes.
+**Estado: demo funcional de video con manifiestos de operación.** Detector local, seguimiento por zonas, permanencia, eventos y casos persistentes. Slack y correo siguen siendo obligatorios para la demo completa; este incremento tiene adaptadores salientes sin conectar y no implementa todavía respuestas entrantes.
 
 ## Ejecutar ahora
 
@@ -19,9 +19,9 @@ Abre [PanelaTeam local](http://127.0.0.1:5173). Pulsa **Analizar video**. La ref
 
 1. Observa cajas, recorridos e IDs temporales sobre el video.
 2. El umbral inicial de ocho segundos abre una revisión de sección. Es configuración exploratoria, no un umbral validado con tiendas.
-3. Revisa el caso y sus mensajes pendientes. En **Registrar observación local**, confirma una situación con nota para recorrer las ramas con stock, sin stock o sin incidencia.
+3. Abre **Casos** y selecciona un expediente. Su hoja reúne la evidencia, las observaciones locales y los mensajes de Slack/correo en orden cronológico. Las siete etapas muestran únicamente el avance con registro; las demás siguen pendientes. En **Registrar observación local**, confirma una situación con nota para recorrer las ramas con stock, sin stock o sin incidencia.
 4. Una reposición solo se cierra después de asignarse y recibir confirmación explícita. El cierre es humano local, no verificación visual ni mensaje externo.
-5. Exporta el registro JSON. Pausar, buscar otra posición o cambiar zonas no debe inflar la permanencia. Cambiar fuente, zonas o umbral inicia una nueva ejecución temporal.
+5. **Revisar instante en el video** pausa la fuente actual en el tiempo registrado cuando corresponde al mismo video; no ejecuta una verificación nueva. Exporta el registro JSON. Pausar, buscar otra posición o cambiar zonas no debe inflar la permanencia. Cambiar fuente, zonas o umbral inicia una nueva ejecución temporal.
 
 Para probar y construir:
 
@@ -32,6 +32,8 @@ npm start
 ```
 
 El build se sirve en [localhost:8787](http://127.0.0.1:8787). La base SQLite vive en `data/private/panela.sqlite`, excluida de Git. `.env.example` describe la configuración opcional; no se necesitan credenciales para la visión y el recorrido local. [Contrato del backend y límites de los conectores](server/README.md).
+
+La interfaz adopta [PRODUCT.md](PRODUCT.md) y [DESIGN.md](DESIGN.md): una columna de 760 px, hojas de papel kraft, tipografía IBM Plex y un registro continuo por caso. El panel de [referencia estática](demo/panel.html) contiene casos ficticios; la app ejecutable presenta los casos de SQLite. Las consultas preparadas, la aceptación de una API y la entrega confirmada son estados distintos.
 
 ## Qué está implementado
 
@@ -65,6 +67,7 @@ Las comunicaciones rutinarias usan una política previa, sin aprobación por men
 
 ## Documentación
 
+- [Producto y alcance de implementación](PRODUCT.md), [sistema de diseño](DESIGN.md) y [adopción en la demo](aidlc-docs/construction/U01-manifest-interface.md).
 - [PRD completo](specs/prd.md): 13 secciones de producto, requisitos y criterios de aceptación; borrador pendiente de revisión.
 - [Proceso HardcoreAI y AI-DLC](specs/process.md): fuentes consultadas, adaptación y estado de las aprobaciones.
 - [Estado de Inception](aidlc-docs/aidlc-state.md) y [preguntas pendientes](aidlc-docs/inception/requirements/requirement-verification-questions.md).
