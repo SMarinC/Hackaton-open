@@ -6,13 +6,15 @@ Repositorio del equipo: [SMarinC/Hackaton-open](https://github.com/SMarinC/Hacka
 
 Documento completo de diseño del PVB v0.1. Para una lectura breve, consultar el [resumen del PVB](PVB.md).
 
+Continuación: [PRD completo](../specs/prd.md), con requisitos e historias en borrador siguiendo HardcoreAI y la adaptación documental de AI-DLC del curso. PVB corresponde a Product Vision Board; este documento desarrolla su visión operativa.
+
 ## 1. Decisiones confirmadas y estado
 
 El usuario confirmó el equipo **PanelaTeam**, el segmento **tiendas de abarrotes con secciones diferenciadas** y el uso de **imágenes y videos de internet para la demo**. Pidió profundizar la visión hacia un PVB: conectar cámaras por tienda, estructurar información y coordinar agentes que consulten personas, soliciten stock o cambios de exhibición y evalúen permanencia, ventas, elección de productos y promociones.
 
 Este documento desarrolla la propuesta inicial «Sistema de análisis visual para optimización de negocios» hacia la operación de tiendas de abarrotes.
 
-La selección de reposición como primer ciclo es una **recomendación de alcance**, todavía no una decisión explícita del equipo. No se han confirmado tienda piloto, cámaras compatibles, acceso a ventas/inventario, canal de comunicación, tamaño del equipo ni implementación. PVB se usa aquí como alcance inicial para validar utilidad operativa y valor de negocio; no implica que el producto ya esté construido o validado.
+La selección de reposición como primer ciclo es una **recomendación de alcance**, todavía no una decisión explícita del equipo. No se han confirmado tienda piloto, cámaras compatibles, acceso a ventas/inventario, canal de comunicación, tamaño del equipo ni implementación. Este desarrollo del Product Vision Board propone un alcance inicial para validar utilidad operativa y valor de negocio; no implica que el producto ya esté construido o validado.
 
 ## 2. Promesa de producto
 

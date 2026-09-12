@@ -4,11 +4,13 @@
 
 Este es el resumen del diseño. El [PVB completo — Operación para tiendas de abarrotes v0.1](01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md) contiene las 13 secciones, el diagrama de arquitectura y el detalle de métricas, permisos y evaluación.
 
+Continuación: [PRD completo](../specs/prd.md), elaborado con la estructura de HardcoreAI e Inception documental de AI-DLC. En este proceso, PVB corresponde a Product Vision Board; el PRD normaliza el término y separa visión, demo y piloto.
+
 ## Estado y propósito
 
 Está confirmado el equipo **PanelaTeam**, el segmento **tiendas de abarrotes con secciones diferenciadas** y el uso de **imágenes y videos de internet para la demo**. La visión solicitada conecta cámaras, estructura observaciones y coordina agentes con las personas responsables de stock, exhibiciones y promociones.
 
-PVB significa aquí un alcance inicial para validar utilidad operativa y valor de negocio. Este documento propone un diseño; no acredita capacidades implementadas ni resultados. **La reposición como primer ciclo sigue siendo una propuesta pendiente de decisión.** Tampoco están confirmados el piloto, las integraciones o los canales de comunicación.
+Este documento amplía el Product Vision Board con un alcance inicial para validar utilidad operativa y valor de negocio. Propone un diseño; no acredita capacidades implementadas ni resultados. **La reposición como primer ciclo sigue siendo una propuesta pendiente de decisión.** Tampoco están confirmados el piloto, las integraciones o los canales de comunicación.
 
 ## Problema e hipótesis de valor
 

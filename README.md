@@ -24,6 +24,9 @@ La elección de este ciclo sigue pendiente de confirmación del equipo. Requiere
 
 ## Documentación
 
+- [PRD completo](specs/prd.md): 13 secciones de producto, requisitos y criterios de aceptación; borrador pendiente de revisión.
+- [Proceso HardcoreAI y AI-DLC](specs/process.md): fuentes consultadas, adaptación y estado de las aprobaciones.
+- [Estado de Inception](aidlc-docs/aidlc-state.md) y [preguntas pendientes](aidlc-docs/inception/requirements/requirement-verification-questions.md).
 - [PVB completo — Operación para tiendas de abarrotes v0.1](docs/01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md): arquitectura, agentes, permisos, métricas, promociones y validación de negocio.
 - [Resumen del PVB](docs/PVB.md): lectura breve del alcance y los criterios de aceptación.
 - [Procedencia de la imagen del equipo](assets/README.md).
