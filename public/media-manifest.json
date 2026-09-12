@@ -1,0 +1,34 @@
+{
+  "source_id": "hdcctv-retail-2017",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/7/77/HD_CCTV_Camera_video_3MP_4MP_iProx_CCTV_HDCCTVCameras.net_retail_store.webm",
+  "title": "HD CCTV Camera video 3MP 4MP iProx CCTV HDCCTVCameras.net retail store",
+  "creator": "HDCCTV Cameras",
+  "recorded_date_source": "2017-12-25 (ficha; overlay video 2017-12-24)",
+  "reference_url": "https://www.youtube.com/watch?v=KMJS66jBtVQ",
+  "source_page": "https://commons.wikimedia.org/wiki/File:HD_CCTV_Camera_video_3MP_4MP_iProx_CCTV_HDCCTVCameras.net_retail_store.webm",
+  "rights_basis": "PD-automated según ficha Commons; no autorización CC del titular",
+  "verified_at": "2026-09-12T18:11:48Z",
+  "duration_seconds_source": 111,
+  "resolution_source": {
+    "width": 1270,
+    "height": 720
+  },
+  "inspection": {
+    "method": "Inspección parcial en Chrome por el equipo",
+    "position_seconds_approx": 8,
+    "full_video_reviewed": false,
+    "observations": [
+      "Perspectiva elevada en tienda de productos para el hogar",
+      "Acceso a la derecha y caja a la izquierda",
+      "Islas de exhibición centrales con oclusiones"
+    ]
+  },
+  "asset_downloaded_by_this_review": false,
+  "file_hash": null,
+  "limitations": [
+    "Los metadatos de ficha y overlay no coinciden en fecha",
+    "La inspección parcial no certifica continuidad completa ni rendimiento del detector",
+    "Personas y permanencia no prueban compra, SKU, interés o faltante",
+    "La clasificación de derechos de Commons se conserva como declaración de la fuente"
+  ]
+}

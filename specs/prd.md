@@ -1,16 +1,18 @@
 # PRD — PanelaTeam: operación autónoma de tiendas de abarrotes
 
-**Versión 0.2 · 12 de septiembre de 2026 · Borrador completo para revisión**
+**Versión 0.2 · 12 de septiembre de 2026 · Borrador completo con adenda de construcción por video**
+
+**Adenda 2026-09-12:** el usuario priorizó análisis temporal de video y pidió iniciar código; también pidió incorporar el cambio remoto `613ce94`, que reafirma Slack y correo obligatorios. Se construye la unidad U01: COCO-SSD local → seguimiento por zonas → evento de permanencia → revisión de sección → caso persistente y salida pendiente. El [README](../README.md) registra lo ejecutable y sus límites. Una confirmación local prueba transiciones; no satisface FR-08 ni acredita autonomía completa. Los requisitos D0 se conservan y su aceptación sigue pendiente.
 
 | Campo | Estado |
 |---|---|
 | Responsable de producto | PanelaTeam; aprobador nominal pendiente |
 | Producto | Nombre comercial pendiente; PanelaTeam es el nombre confirmado del equipo |
 | Fuente de visión | [PVB de operación autónoma v0.2](../docs/02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md), con [PVB v0.1](../docs/01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md) como antecedente |
-| Base del repositorio consultada | Commit `84d2710`; documentación y assets, sin aplicación |
-| Alcance de este cambio | Revisar autonomía, comunicaciones Slack/correo y evidencia de D0; actualización documental de Inception |
+| Base de construcción | Commit `613ce94`, que incorpora el cambio del equipo sobre Slack/correo |
+| Alcance de este incremento | U01 de video y casos locales; integración bidireccional queda para U02 |
 | Aprobación del PRD | Pendiente; redactado no significa aprobado |
-| Implementación y validación | No iniciadas en este encargo; ninguna meta es un resultado medido |
+| Implementación y validación | U01 iniciada por solicitud explícita; pruebas en código y revisión de navegador documentadas en Construction; no se declara aceptación completa del PRD |
 
 **Uso:** este archivo es la fuente canónica de requisitos de producto. El [índice AI-DLC](../aidlc-docs/inception/requirements/requirements.md) enlaza sus requisitos; las [historias](../aidlc-docs/inception/user-stories/stories.md) detallan aceptación. El [método](process.md) documenta las fuentes de HardcoreAI y la adaptación de AI-DLC classic del curso. Las [preguntas](../aidlc-docs/inception/requirements/requirement-verification-questions.md) separan respuestas del usuario de propuestas.
 

@@ -1,5 +1,9 @@
 # Estado AI-DLC — PanelaTeam
 
+**Estado vigente posterior:** el usuario autorizó iniciar código orientado a video y revisar el cambio remoto `613ce94`. Se construyó [U01 — Video y casos](construction/U01-video-operations.md), con aplicación ejecutable, 38 pruebas automatizadas y build local correcto. Slack/correo siguen obligatorios: adaptadores de salida preparados, cuentas y recepción real pendientes; no se acepta D0 completo. No se registra aprobación global del PRD ni gates formales inexistentes.
+
+La captura siguiente se conserva como antecedente de Inception; sus frases «sin aplicación» y «Construction no iniciada» describen ese momento, anterior a la nueva autorización. Para arrancar y conocer el alcance real, consultar el [README](../README.md).
+
 **Captura inicial: 2026-09-12 16:35:03 UTC. Última actualización documental: 2026-09-12 17:13:30 UTC.**
 
 ## Contexto
