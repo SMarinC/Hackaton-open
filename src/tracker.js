@@ -30,6 +30,18 @@ function containsPoint(polygon, point) {
   return inside;
 }
 
+function appearanceSimilarity(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b) || !a.length || a.length !== b.length)
+    return 0;
+  let sumSquares = 0;
+  for (let i = 0; i < a.length; i++) {
+    const delta = a[i] - b[i];
+    sumSquares += delta * delta;
+  }
+  const maxDistance = Math.sqrt(a.length * 255 * 255);
+  return 1 - Math.min(1, Math.sqrt(sumSquares) / maxDistance);
+}
+
 function intersectionOverUnion(a, b) {
   const width = Math.max(
     0,
@@ -118,6 +130,18 @@ function usableDetection(detection, minScore) {
  * A backwards seek or sample gap greater than maxGap resets the whole run.
  * IDs are run-local: callers must pair them with their own unique run identifier.
  * visit_id changes on each observed zone entry; short gaps retain the same visit.
+ *
+ * Optional appearance re-identification (heuristic, not real identity): when a
+ * detection carries an `appearance` vector (any fixed-length array of numbers
+ * on a 0-255 scale, e.g. a coarse per-cell color average of the crop), a track
+ * lost beyond maxGap is held in a short-lived pool instead of discarded
+ * immediately, and can be revived by a later unmatched detection whose
+ * appearance is similar enough. This never engages for detections without an
+ * appearance vector, so geometry-only callers see identical behavior to
+ * before. A revival always resets dwell and starts a new visit — it only
+ * keeps the same run-local id across a longer gap for counting purposes; two
+ * people dressed alike can still be confused, and this is a similarity
+ * heuristic, never a validated identity match.
  */
 export class ZoneTracker {
   constructor({
@@ -125,6 +149,8 @@ export class ZoneTracker {
     dwellThreshold = 8,
     maxGap = 1.5,
     minScore = 0.45,
+    reidWindow = maxGap,
+    reidSimilarity = 0.9,
   } = {}) {
     this.zones = copyZones(zones);
     if (!finite(dwellThreshold) || dwellThreshold <= 0) {
@@ -137,14 +163,25 @@ export class ZoneTracker {
     if (!finite(minScore) || minScore < 0 || minScore > 1) {
       throw new RangeError("minScore must be between zero and one");
     }
+    if (!finite(reidWindow) || reidWindow < maxGap) {
+      throw new RangeError(
+        "reidWindow must be a number of seconds at least as large as maxGap",
+      );
+    }
+    if (!finite(reidSimilarity) || reidSimilarity < 0 || reidSimilarity > 1) {
+      throw new RangeError("reidSimilarity must be between zero and one");
+    }
     this.dwellThreshold = dwellThreshold;
     this.maxGap = maxGap;
     this.minScore = minScore;
+    this.reidWindow = reidWindow;
+    this.reidSimilarity = reidSimilarity;
     this.reset();
   }
 
   reset() {
     this._tracks = new Map();
+    this._lostTracks = new Map();
     this._visibleIds = new Set();
     this._lastTime = null;
     this._nextId = 1;
@@ -168,7 +205,14 @@ export class ZoneTracker {
     }
     const elapsed = this._lastTime === null ? 0 : mediaTime - this._lastTime;
     for (const [id, track] of this._tracks) {
-      if (mediaTime - track.lastSeen > this.maxGap) this._tracks.delete(id);
+      if (mediaTime - track.lastSeen > this.maxGap) {
+        this._tracks.delete(id);
+        if (Array.isArray(track.appearance)) this._lostTracks.set(id, track);
+      }
+    }
+    for (const [id, track] of this._lostTracks) {
+      if (mediaTime - track.lastSeen > this.reidWindow)
+        this._lostTracks.delete(id);
     }
 
     const valid = detections.filter((detection) =>
@@ -212,6 +256,34 @@ export class ZoneTracker {
       assignments.set(candidate.detectionIndex, candidate.id);
     }
 
+    if (this._lostTracks.size) {
+      const revivalCandidates = [];
+      valid.forEach((detection, detectionIndex) => {
+        if (assignments.has(detectionIndex) || !Array.isArray(detection.appearance))
+          return;
+        for (const lost of this._lostTracks.values()) {
+          const quality = appearanceSimilarity(lost.appearance, detection.appearance);
+          if (quality >= this.reidSimilarity) {
+            revivalCandidates.push({ id: lost.id, detectionIndex, quality });
+          }
+        }
+      });
+      revivalCandidates.sort((a, b) => b.quality - a.quality);
+      const revivedIds = new Set();
+      for (const candidate of revivalCandidates) {
+        if (revivedIds.has(candidate.id) || assignments.has(candidate.detectionIndex))
+          continue;
+        revivedIds.add(candidate.id);
+        assignments.set(candidate.detectionIndex, candidate.id);
+        const revived = this._lostTracks.get(candidate.id);
+        this._lostTracks.delete(candidate.id);
+        revived.dwell = 0;
+        revived.emitted = false;
+        if (revived.zoneId !== null) revived.visitSequence += 1;
+        this._tracks.set(candidate.id, revived);
+      }
+    }
+
     const visible = [];
     const events = [];
     valid.forEach((detection, detectionIndex) => {
@@ -238,6 +310,8 @@ export class ZoneTracker {
 
       track.bbox = [...detection.bbox];
       track.score = detection.score;
+      if (Array.isArray(detection.appearance))
+        track.appearance = detection.appearance;
       track.zoneId = zoneId;
       track.zoneName = zone?.name ?? null;
       track.visit_id =

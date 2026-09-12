@@ -174,7 +174,7 @@ export function startServer({ env = process.env } = {}) {
   const server = createServer(createHandler({ store, env }));
   server.listen(Number(env.PORT ?? 8787), "127.0.0.1", () =>
     console.log(
-      `PanelaTeam API disponible en http://127.0.0.1:${server.address().port}`,
+      `PanelaStocks API disponible en http://127.0.0.1:${server.address().port}`,
     ),
   );
   server.on("close", () => store.close());

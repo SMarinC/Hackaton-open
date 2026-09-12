@@ -120,7 +120,7 @@ export async function sendOutbox(
             : {
                 from: env.PANELA_EMAIL_FROM,
                 to: [channel.recipient],
-                subject: `[DEMO PanelaTeam] ${item.intent} · ${item.case_id}`,
+                subject: `[DEMO PanelaStocks] ${item.intent} · ${item.case_id}`,
                 text: item.text,
               },
         ),

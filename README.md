@@ -1,4 +1,4 @@
-# PanelaTeam · Operación de tiendas de abarrotes
+# PanelaStocks · Operación de tiendas de abarrotes
 
 ![PanelaTeam en las montañas de Medellín](assets/panelateam-medellin.png)
 
@@ -15,7 +15,7 @@ npm ci
 npm run dev
 ```
 
-Abre [PanelaTeam local](http://127.0.0.1:5173). Pulsa **Analizar video**. La referencia CCTV del usuario ya está configurada; también puedes abrir un MP4/WebM local compatible con el navegador. No se descarga un video al repositorio ni se extraen píxeles de un iframe de YouTube.
+Abre [PanelaStocks local](http://127.0.0.1:5173). Pulsa **Analizar video**. La referencia CCTV del usuario ya está configurada; también puedes abrir un MP4/WebM local compatible con el navegador. No se descarga un video al repositorio ni se extraen píxeles de un iframe de YouTube.
 
 1. Observa cajas, recorridos e IDs temporales sobre el video.
 2. El umbral inicial de ocho segundos abre una revisión de sección. Es configuración exploratoria, no un umbral validado con tiendas.

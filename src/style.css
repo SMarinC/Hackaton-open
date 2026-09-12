@@ -398,8 +398,31 @@ h3 {
 .zone-row-name {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  row-gap: 2px;
   gap: 9px;
   font-size: .8rem;
+}
+.shelf-reading {
+  flex-basis: 100%;
+  margin-left: 25px;
+  color: var(--muted);
+  font-size: .64rem;
+  font-weight: 400;
+}
+.shelf-baseline-row {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.shelf-baseline-row button {
+  align-self: flex-start;
+}
+.shelf-baseline-row small {
+  color: var(--muted);
+  font-size: .67rem;
+  line-height: 1.4;
 }
 .zone-index {
   color: var(--muted);

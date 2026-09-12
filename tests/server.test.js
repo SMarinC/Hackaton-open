@@ -25,6 +25,10 @@ const event = (overrides = {}) => ({
   duration_s: 5,
   confidence: 0.9,
   event_type: "person_dwell_detected",
+  // Below SHELF_ALERT_THRESHOLD, so the fixture's default keeps raising the
+  // ask_review ping every other test here already assumes; tests exercising
+  // the gate itself override this explicitly.
+  shelf_occupancy_score: 0.3,
   ...overrides,
 });
 const liveEnv = {
@@ -108,6 +112,30 @@ test("case and outbox survive reopen; duplicate frames never create extra messag
     store.close();
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("dwell alone never pings Slack; only a shelf score below threshold does", (t) => {
+  const store = memory(t);
+  const withheld = store.ingest(event({ shelf_occupancy_score: 0.9 })).case;
+  assert.equal(withheld.status, "review_required", "the case is still recorded as a metric");
+  assert.equal(store.listOutbox().length, 0, "a full-looking shelf never raises an alert");
+  assert.equal(
+    withheld.timeline.at(-1).type,
+    "shelf_alert_withheld",
+    "the withheld alert is recorded, not silently dropped",
+  );
+
+  const bareEvent = event({ event_id: "event-no-shelf", run_id: "run-no-shelf" });
+  delete bareEvent.shelf_occupancy_score;
+  store.ingest(bareEvent);
+  assert.equal(store.listOutbox().length, 0, "no shelf reading is not evidence of an empty shelf either");
+
+  const alerted = store.ingest(
+    event({ event_id: "event-alert", run_id: "run-alert", shelf_occupancy_score: 0.2 }),
+  ).case;
+  assert.equal(store.listOutbox().length, 1);
+  assert.equal(store.listOutbox()[0].intent, "ask_review");
+  assert.equal(store.listOutbox()[0].case_id, alerted.id);
 });
 
 test("mutated duplicate and unsupported visual inference are rejected without writes", (t) => {

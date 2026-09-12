@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="oklch(96% 0.015 80)" />
-    <title>PanelaTeam · Mesa de operación</title>
+    <title>PanelaStocks · Mesa de operación</title>
   </head>
   <body>
     <a class="skip-link" href="#main">Ir al contenido</a>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand">
-          <a class="wordmark" href="/" aria-label="PanelaTeam, inicio">PanelaTeam</a>
+          <a class="wordmark" href="/" aria-label="PanelaStocks, inicio">PanelaStocks</a>
           <span class="topbar-subtitle">Mesa de operación</span>
         </div>
         <div class="topbar-actions">
@@ -105,6 +105,17 @@
               >
             </div>
             <div id="zones" class="zones"></div>
+            <p class="shelf-baseline-row">
+              <button id="mark-baseline" class="quiet" type="button">
+                Marcar estantería llena ahora
+              </button>
+              <small
+                >Guarda cómo se ve cada zona en este instante como referencia
+                de "lleno"; los estantes se leen contra ella hasta que la
+                vuelvas a marcar. Heurística local de bordes/color, no
+                reconocimiento de producto.</small
+              >
+            </p>
             <details class="zone-config">
               <summary>Editar zonas del video</summary>
               <p>
@@ -200,7 +211,7 @@
       </details>
     </main>
     <footer class="colophon">
-      <span>PanelaTeam · Agents, Everywhere</span>
+      <span>PanelaStocks · Agents, Everywhere</span>
       <a href="/demo/panel.html">Ejemplos de reporte (ficticios)</a>
       <span>Medellín, 2026 · Prototipo</span>
     </footer>

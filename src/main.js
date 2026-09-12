@@ -41,13 +41,19 @@ let zones = [
     ],
   },
 ];
-let tracker = new ZoneTracker({ zones, dwellThreshold: 8 });
+// A brief occlusion or a person stepping just out of frame should not inflate
+// the people count with a fresh id; reidWindow keeps a short appearance-based
+// memory beyond the geometric TTL (see ZoneTracker). It is a color heuristic,
+// not validated identity: two people dressed alike can still be confused.
+const REID_OPTIONS = { reidWindow: 6, reidSimilarity: 0.9 };
+let tracker = new ZoneTracker({ zones, dwellThreshold: 8, ...REID_OPTIONS });
 let runId = crypto.randomUUID();
 let sourceId = "hdcctv-retail-2017";
 let manifest;
 let localUrl;
 let analyzing = false;
 let latest = { tracks: [], zoneStats: [] };
+let latestShelfOccupancy = [];
 let events = [];
 let caseState = { cases: [], outbox: [] };
 let stateFingerprint = "";
@@ -106,6 +112,7 @@ function resetTracking(reason) {
   if (reason) $("model-status").textContent = reason;
 }
 const analyzer = new VideoAnalyzer(video, {
+  getZones: () => zones,
   onStatus: (status) => {
     $("model-status").textContent = status;
   },
@@ -117,7 +124,8 @@ const analyzer = new VideoAnalyzer(video, {
       `No se pudo analizar el video. Comprueba la conexión o abre un archivo local. ${err.message}`,
     );
   },
-  onFrame: ({ mediaTime, inferenceMs, detections }) => {
+  onFrame: ({ mediaTime, inferenceMs, detections, shelfOccupancy }) => {
+    latestShelfOccupancy = shelfOccupancy;
     latest = tracker.update(detections, mediaTime);
     if (latest.reset) runId = crypto.randomUUID();
     $("inference-time").textContent = `${Math.round(inferenceMs)} ms`;
@@ -128,6 +136,9 @@ const analyzer = new VideoAnalyzer(video, {
         : "Analizando · COCO-SSD local",
     );
     for (const event of latest.events) {
+      const shelfReading = latestShelfOccupancy.find(
+        (reading) => reading.zoneId === event.zone_id,
+      );
       const record = {
         ...event,
         event_id: crypto.randomUUID(),
@@ -139,6 +150,12 @@ const analyzer = new VideoAnalyzer(video, {
         zone_polygon: zones
           .find((z) => z.id === event.zone_id)
           ?.polygon.map((p) => [...p]),
+        // Dwell alone is a metric, never an alert (PRODUCT.md principle 8):
+        // the server only pings Slack when this heuristic reads low, so
+        // omit it entirely rather than send a number that isn't a real reading.
+        ...(typeof shelfReading?.score === "number"
+          ? { shelf_occupancy_score: shelfReading.score }
+          : {}),
         status: "pending",
       };
       events.unshift(record);
@@ -168,7 +185,14 @@ function renderObservations() {
   $("zones").innerHTML = zones
     .map((zone, i) => {
       const stat = latest.zoneStats.find((s) => s.id === zone.id);
-      return `<div class="zone-row"><div class="zone-row-name"><span class="zone-index mono">${String(i + 1).padStart(2, "0")}</span>${escapeHtml(zone.name)}</div><strong>${stat?.count || 0} detectadas · ${(stat?.maxDwell || 0).toFixed(1)} s</strong></div>`;
+      const shelf = latestShelfOccupancy.find((s) => s.zoneId === zone.id);
+      const shelfLabel =
+        shelf == null
+          ? ""
+          : shelf.score == null
+            ? `<small class="shelf-reading">Estante: sin línea base — usa "Marcar estantería llena"</small>`
+            : `<small class="shelf-reading">Estante: ${Math.round(shelf.score * 100)}% de la línea base (heurística, no validada)</small>`;
+      return `<div class="zone-row"><div class="zone-row-name"><span class="zone-index mono">${String(i + 1).padStart(2, "0")}</span>${escapeHtml(zone.name)}${shelfLabel}</div><strong>${stat?.count || 0} detectadas · ${(stat?.maxDwell || 0).toFixed(1)} s</strong></div>`;
     })
     .join("");
 }
@@ -416,11 +440,21 @@ function useReference() {
   $("source-kind").textContent =
     "Reproducción histórica · análisis en este navegador";
   $("source-note").innerHTML =
-    `Fuente: <a href="${escapeHtml(manifest.source_page)}" target="_blank" rel="noreferrer">HDCCTV Cameras / Wikimedia Commons</a>. Grabación histórica de productos para el hogar; zonas propuestas para explorar circulación. Derechos: PD-automated según ficha de Commons. No es una tienda de PanelaTeam ni una cámara en vivo.`;
+    `Fuente: <a href="${escapeHtml(manifest.source_page)}" target="_blank" rel="noreferrer">HDCCTV Cameras / Wikimedia Commons</a>. Grabación histórica de productos para el hogar; zonas propuestas para explorar circulación. Derechos: PD-automated según ficha de Commons. No es una tienda de PanelaStocks ni una cámara en vivo.`;
   $("reference").hidden = true;
   $("analyze").textContent = "Analizar video";
 }
 $("reference").addEventListener("click", useReference);
+$("mark-baseline").addEventListener("click", () => {
+  const marked = analyzer.captureShelfBaseline();
+  setStatus(
+    "model-status",
+    marked
+      ? `Línea base de estantería guardada · ${marked} zona${marked === 1 ? "" : "s"}`
+      : "Sin zonas configuradas: no hay nada que marcar como línea base",
+  );
+  draw();
+});
 $("zones-json").value = JSON.stringify(zones, null, 2);
 $("save-zones").addEventListener("click", () => {
   try {
@@ -428,6 +462,7 @@ $("save-zones").addEventListener("click", () => {
     const candidate = new ZoneTracker({
       zones: proposed,
       dwellThreshold: tracker.dwellThreshold,
+      ...REID_OPTIONS,
     });
     zones = proposed;
     tracker = candidate;
@@ -447,7 +482,7 @@ $("threshold").addEventListener("change", () => {
     return;
   }
   error("");
-  tracker = new ZoneTracker({ zones, dwellThreshold: threshold });
+  tracker = new ZoneTracker({ zones, dwellThreshold: threshold, ...REID_OPTIONS });
   resetTracking("Umbral actualizado · medición reiniciada");
 });
 $("events").addEventListener("click", (event) => {

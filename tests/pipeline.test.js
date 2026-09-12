@@ -45,6 +45,9 @@ function envelope(event, runId) {
     detector: "fixture-normalized-person-boxes-v1",
     threshold_s: threshold,
     zone_polygon: fixtureZone.polygon.map((point) => [...point]),
+    // Below SHELF_ALERT_THRESHOLD, so these fixtures keep raising the
+    // ask_review ping the outbox-count assertions below already assume.
+    shelf_occupancy_score: 0.3,
   };
 }
 

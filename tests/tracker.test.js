@@ -110,6 +110,94 @@ test("TTL expiration discards identity and dwell without requiring a playback ju
   assert.equal(returned.tracks[0].dwell, 0);
 });
 
+test("a lost track can be revived by matching appearance within reidWindow, but starts a fresh visit", () => {
+  const appearance = [10, 20, 30, 200, 190, 180];
+  const subject = tracker({ reidWindow: 4, reidSimilarity: 0.9 });
+  const initial = subject.update([{ ...person(), appearance }], 0);
+  subject.update([], 0.5);
+  subject.update([], 1);
+  subject.update([], 1.5);
+  const revived = subject.update([{ ...person(), appearance }], 2);
+  assert.equal(
+    revived.tracks[0].id,
+    initial.tracks[0].id,
+    "the run-local id survives the gap when appearance matches",
+  );
+  assert.equal(revived.tracks[0].dwell, 0, "dwell never accrues across the gap");
+  assert.notEqual(
+    revived.tracks[0].visit_id,
+    initial.tracks[0].visit_id,
+    "revival always starts a new visit",
+  );
+});
+
+test("a track lost beyond reidWindow is discarded even with matching appearance", () => {
+  const appearance = [10, 20, 30, 200, 190, 180];
+  const subject = tracker({ reidWindow: 2, reidSimilarity: 0.9 });
+  const initial = subject.update([{ ...person(), appearance }], 0);
+  subject.update([], 0.5);
+  subject.update([], 1);
+  subject.update([], 1.5);
+  subject.update([], 2.5);
+  const late = subject.update([{ ...person(), appearance }], 3.5);
+  assert.notEqual(late.tracks[0].id, initial.tracks[0].id);
+});
+
+test("dissimilar appearance does not revive a lost track", () => {
+  const subject = tracker({ reidWindow: 4, reidSimilarity: 0.9 });
+  const initial = subject.update(
+    [{ ...person(), appearance: [0, 0, 0, 0, 0, 0] }],
+    0,
+  );
+  subject.update([], 0.5);
+  subject.update([], 1);
+  subject.update([], 1.5);
+  const different = subject.update(
+    [{ ...person(), appearance: [255, 255, 255, 255, 255, 255] }],
+    2,
+  );
+  assert.notEqual(different.tracks[0].id, initial.tracks[0].id);
+});
+
+test("revival never engages without an appearance vector on the new detection", () => {
+  const subject = tracker({ reidWindow: 4 });
+  const initial = subject.update(
+    [{ ...person(), appearance: [10, 20, 30] }],
+    0,
+  );
+  subject.update([], 0.5);
+  subject.update([], 1);
+  subject.update([], 1.5);
+  const returned = subject.update([person()], 2);
+  assert.notEqual(returned.tracks[0].id, initial.tracks[0].id);
+});
+
+test("only the closest appearance match revives a lost track when several detections compete", () => {
+  const appearance = [10, 20, 30, 200, 190, 180];
+  const subject = tracker({ reidWindow: 4, reidSimilarity: 0.5 });
+  const initial = subject.update(
+    [{ ...person([0.3, 0.4, 0.1, 0.3]), appearance }],
+    0,
+  );
+  subject.update([], 0.5);
+  subject.update([], 1);
+  subject.update([], 1.5);
+  const close = {
+    ...person([0.05, 0.4, 0.1, 0.3]),
+    appearance: [12, 22, 28, 198, 188, 182],
+  };
+  const far = {
+    ...person([0.8, 0.4, 0.1, 0.3]),
+    appearance: [60, 70, 80, 140, 130, 120],
+  };
+  const state = subject.update([close, far], 2);
+  assert.equal(state.tracks.length, 2);
+  const revivedTrack = state.tracks.find((t) => t.id === initial.tracks[0].id);
+  assert.ok(revivedTrack, "the closer appearance match revives the lost id");
+  const newTrack = state.tracks.find((t) => t.id !== initial.tracks[0].id);
+  assert.ok(newTrack, "the weaker match gets a fresh id instead of the lost one");
+});
+
 test("explicit exit and reentry reset the visit and allow a new threshold event", () => {
   const subject = tracker({ dwellThreshold: 0.5 });
   const inside = person([0.3, 0.3, 0.1, 0.25]);

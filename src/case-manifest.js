@@ -43,6 +43,7 @@ export const statusLabel = (status) =>
 
 const entryLabels = {
   person_dwell_detected: "Permanencia detectada",
+  shelf_alert_withheld: "Aviso a Slack retenido",
   stock_confirmed: "Incidencia y stock confirmados localmente",
   no_stock: "Incidencia confirmada localmente, sin stock",
   restocked: "Ejecución reportada localmente",
@@ -251,7 +252,7 @@ function renderProvenance(item) {
       ? `<button class="quiet review-evidence" type="button" data-source="${escape(source.source_id)}" data-media-time="${escape(source.media_time_s)}">Revisar instante en el video</button>`
       : "";
   return `<div class="case-provenance">
-    <p class="evidence-note">Clip: t = <span class="mono">${formatClipTime(source.media_time_s)}</span> · Permanencia acumulada: <span class="mono">${seconds(source.duration_s)}</span>. La permanencia motiva una revisión; no demuestra faltante ni compra.</p>
+    <p class="evidence-note">Detectado en el minuto <span class="mono">${formatClipTime(source.media_time_s)}</span> del clip (no es el reloj en vivo de arriba) · Permanencia acumulada: <span class="mono">${seconds(source.duration_s)}</span>. La permanencia motiva una revisión; no demuestra faltante ni compra.</p>
     ${evidenceButton}
     <details class="evidence-details"><summary>Evidencia y procedencia</summary><dl>
       <dt>ID del caso</dt><dd class="mono">${escape(hasText(item.id) ? item.id : "ID desconocido")}</dd>

@@ -1,5 +1,5 @@
 ---
-name: PanelaTeam
+name: PanelaStocks
 description: Centro de operación cálido y denso en datos — video, zonas y casos en una sola mesa de trabajo.
 colors:
   accent: "oklch(47% 0.1 47)"
@@ -74,13 +74,13 @@ components:
     rounded: "{rounded.sm}"
 ---
 
-# Design System: PanelaTeam
+# Design System: PanelaStocks
 
 ## Overview
 
 **Creative North Star: "La mesa de operación"**
 
-PanelaTeam es un centro de operación denso, no una landing ni un dashboard de vanidad: video con overlay de detección a la izquierda, mesa de coordinación de casos a la derecha, registro de observaciones abajo — todo visible a la vez, sin modales ni pasos ocultos. La paleta es papel cálido y tinta café, no gris-azul de SaaS genérico; la densidad de información es alta y deliberada, con tipografía de sistema (sin webfont cargada) que prioriza legibilidad y arranque instantáneo sobre personalidad tipográfica.
+PanelaStocks es un centro de operación denso, no una landing ni un dashboard de vanidad: video con overlay de detección a la izquierda, mesa de coordinación de casos a la derecha, registro de observaciones abajo — todo visible a la vez, sin modales ni pasos ocultos. La paleta es papel cálido y tinta café, no gris-azul de SaaS genérico; la densidad de información es alta y deliberada, con tipografía de sistema (sin webfont cargada) que prioriza legibilidad y arranque instantáneo sobre personalidad tipográfica.
 
 Este documento reemplaza una versión anterior que documentaba únicamente `demo/panel.html`, una exploración construida antes de que este sistema existiera en código. Ese archivo fue reescrito para extender esta misma identidad — ver su nota en `demo/panel.html`.
 

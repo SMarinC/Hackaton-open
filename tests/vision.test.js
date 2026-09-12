@@ -6,7 +6,7 @@ const prediction = { class: "person", score: 0.9, bbox: [64, 36, 128, 216] };
 
 // No model download, browser, camera, timers or real video is involved here.
 // Deferred predictions exercise the asynchronous lifecycle of the actual analyzer.
-function harness(t) {
+function harness(t, { readableCanvas = false, texturedCanvas = false, zones = null } = {}) {
   const keys = [
     "document",
     "performance",
@@ -39,7 +39,47 @@ function harness(t) {
   install("document", {
     createElement(tag) {
       assert.equal(tag, "canvas");
-      return { width: 0, height: 0, getContext: () => ({ drawImage() {} }) };
+      return {
+        width: 0,
+        height: 0,
+        getContext: () => ({
+          drawImage() {},
+          ...(readableCanvas
+            ? {
+                getImageData: (x, y, w, h) => {
+                  const data = new Uint8ClampedArray(w * h * 4);
+                  for (let i = 0; i < data.length; i += 4) {
+                    data[i] = 100;
+                    data[i + 1] = 150;
+                    data[i + 2] = 200;
+                    data[i + 3] = 255;
+                  }
+                  return { data, width: w, height: h };
+                },
+              }
+            : {}),
+          ...(texturedCanvas
+            ? {
+                // A deterministic checkerboard, so edge activity is positive
+                // and identical for any two samples of the same size.
+                getImageData: (x, y, w, h) => {
+                  const data = new Uint8ClampedArray(w * h * 4);
+                  for (let py = 0; py < h; py++) {
+                    for (let px = 0; px < w; px++) {
+                      const offset = (py * w + px) * 4;
+                      const on = (px + py) % 2 === 0;
+                      data[offset] = data[offset + 1] = data[offset + 2] = on
+                        ? 220
+                        : 20;
+                      data[offset + 3] = 255;
+                    }
+                  }
+                  return { data, width: w, height: h };
+                },
+              }
+            : {}),
+        }),
+      };
     },
   });
   install("performance", { now: () => now });
@@ -62,6 +102,7 @@ function harness(t) {
     onFrame: (frame) => frames.push(frame),
     onError: (error) => errors.push(error),
     onStatus() {},
+    ...(zones ? { getZones: () => zones } : {}),
   });
   analyzer.model = {
     detect() {
@@ -189,4 +230,86 @@ test("reset during inference discards stale detections and keeps the same loop s
   assert.equal(h.frames[0].mediaTime, 5);
   assert.deepEqual(h.errors, []);
   assert.equal(h.callbacks.size, 1);
+});
+
+test("detections carry no appearance signature when the canvas cannot be read", async (t) => {
+  const h = harness(t);
+  h.analyzer.start();
+  h.requests[0].resolve([prediction]);
+  await flushMicrotasks();
+  assert.equal(h.frames.length, 1);
+  assert.equal(h.frames[0].detections[0].appearance, undefined);
+});
+
+test("a readable canvas attaches a local per-cell color signature to each person detection", async (t) => {
+  const h = harness(t, { readableCanvas: true });
+  h.analyzer.start();
+  h.requests[0].resolve([prediction]);
+  await flushMicrotasks();
+  assert.equal(h.frames.length, 1);
+  const [detection] = h.frames[0].detections;
+  assert.ok(Array.isArray(detection.appearance));
+  // 3 rows x 2 cols x 3 channels, and every pixel is the same solid color.
+  assert.deepEqual(detection.appearance, new Array(6).fill([100, 150, 200]).flat());
+});
+
+const shelfZone = {
+  id: "shelf-1",
+  name: "Estante 1",
+  polygon: [
+    [0.1, 0.1],
+    [0.4, 0.1],
+    [0.4, 0.4],
+    [0.1, 0.4],
+  ],
+};
+
+test("without configured zones, frames carry no shelf occupancy readings", async (t) => {
+  const h = harness(t, { readableCanvas: true });
+  h.analyzer.start();
+  h.requests[0].resolve([prediction]);
+  await flushMicrotasks();
+  assert.deepEqual(h.frames[0].shelfOccupancy, []);
+});
+
+test("a zone reads unknown occupancy (never a misleading zero) until a baseline is captured", async (t) => {
+  const h = harness(t, { readableCanvas: true, zones: [shelfZone] });
+  h.analyzer.start();
+  h.requests[0].resolve([prediction]);
+  await flushMicrotasks();
+  assert.equal(h.frames[0].shelfOccupancy.length, 1);
+  const [reading] = h.frames[0].shelfOccupancy;
+  assert.equal(reading.zoneId, "shelf-1");
+  assert.equal(reading.score, null, "no baseline captured yet");
+});
+
+test("capturing a baseline scores an unchanged scene at full occupancy", async (t) => {
+  const h = harness(t, { texturedCanvas: true, zones: [shelfZone] });
+  h.analyzer.start();
+  h.requests[0].resolve([prediction]);
+  await flushMicrotasks();
+
+  const captured = h.analyzer.captureShelfBaseline();
+  assert.equal(captured, 1, "one zone got a baseline");
+
+  h.video.currentTime = 2;
+  h.nextFrame();
+  h.requests[1].resolve([prediction]);
+  await flushMicrotasks();
+  assert.equal(h.frames[1].shelfOccupancy[0].score, 1);
+});
+
+test("a reset clears the shelf baseline so a new scene is never scored against a stale one", async (t) => {
+  const h = harness(t, { readableCanvas: true, zones: [shelfZone] });
+  h.analyzer.start();
+  h.requests[0].resolve([prediction]);
+  await flushMicrotasks();
+  h.analyzer.captureShelfBaseline();
+
+  h.video.currentTime = 5;
+  h.analyzer.reset();
+  h.nextFrame();
+  h.requests[1].resolve([prediction]);
+  await flushMicrotasks();
+  assert.equal(h.frames[1].shelfOccupancy[0].score, null);
 });

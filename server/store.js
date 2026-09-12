@@ -82,8 +82,23 @@ export function validateEvent(input) {
     ...(input.zone_polygon === undefined
       ? {}
       : { zone_polygon: polygon(input.zone_polygon) }),
+    ...(input.shelf_occupancy_score === undefined
+      ? {}
+      : {
+          shelf_occupancy_score: numeric(
+            input.shelf_occupancy_score,
+            "shelf_occupancy_score",
+            0,
+            1,
+          ),
+        }),
   };
 }
+
+// Below this fraction of its own baseline, a shelf reads as emptier than it
+// was — the only thing allowed to raise a Slack "ask_review" ping. Dwell
+// alone is a metric now, never an alert: see PRODUCT.md principle 8.
+const SHELF_ALERT_THRESHOLD = 0.6;
 
 export function createStore({
   filename = resolve("data/private/panela.sqlite"),
@@ -144,7 +159,7 @@ export function createStore({
     item.timeline.push({ id: randomUUID(), at: now(), type, detail, source });
   };
   const messageText = (item, intent) => {
-    const title = `[DEMO PanelaTeam · ${item.id}] ${item.zone_name}`;
+    const title = `[DEMO PanelaStocks · ${item.id}] ${item.zone_name}`;
     const provenance = `Fuente de video: ${item.source.source_id}; ejecución ${item.source.run_id}; t=${item.source.media_time_s}s. Inventario de demostración, no POS real.`;
     const body = {
       ask_review: `Se observó permanencia en esta sección durante ${item.source.duration_s.toFixed(1)} s. Revisa la sección y confirma si hay alguna situación que atender. La permanencia no demuestra faltante, compra ni problema.`,
@@ -301,7 +316,19 @@ export function createStore({
             episodeKey,
             JSON.stringify(item),
           );
-          enqueue(item, "slack", "ask_review");
+          if (
+            typeof event.shelf_occupancy_score === "number" &&
+            event.shelf_occupancy_score < SHELF_ALERT_THRESHOLD
+          ) {
+            enqueue(item, "slack", "ask_review");
+          } else {
+            timeline(
+              item,
+              "shelf_alert_withheld",
+              "Sin heurística de estante que confirme una posible incidencia; aviso a Slack no enviado.",
+            );
+            saveCase(item);
+          }
         } else {
           // Further frames of this visit enrich the same case, including after its closure.
           item.source.duration_s = Math.max(

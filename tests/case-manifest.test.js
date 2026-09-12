@@ -208,7 +208,7 @@ test("Bogota wall-clock dates are explicit and distinct from clip time", () => {
   assert.match(html, /America\/Bogota/);
   assert.match(html, /19:05:00/);
   assert.match(html, /11\/09\/2026/);
-  assert.match(html, /Clip: t = <span class="mono">00:05\.0<\/span>/);
+  assert.match(html, /Detectado en el minuto <span class="mono">00:05\.0<\/span>/);
   assert.match(html, /Hora desconocida/);
   assert.doesNotMatch(html, /1970|datetime="2026-09-12T16:00:00"/);
 });
