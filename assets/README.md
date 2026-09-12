@@ -12,6 +12,8 @@ El 12 de septiembre de 2026, una inspección en Chrome reprodujo una respuesta d
 
 La fijación de la URL de `raw.githubusercontent.com` a un commit tampoco resolvió la carga en Chrome. El README usa ahora una [copia del PNG original en los adjuntos de GitHub](https://github.com/user-attachments/assets/7d92dfa2-2abc-4919-8c9b-512aa5b29dd5). Se subió el mismo archivo, sin regenerarlo ni editarlo; la vista previa decodificó sus 1254 × 1254 píxeles. El original versionado y su hash siguen siendo la referencia de integridad. La URL del README es la dirección estable del adjunto, no la redirección temporal firmada que devuelve el servicio.
 
+Después de publicar el adjunto en la [PR #8](https://github.com/SMarinC/Hackaton-open/pull/8), un GET sin autenticación obtuvo `200 image/png`, 2.748.537 bytes y el SHA-256 `e2ba2afa2dd12dcaa05737acc840e234df3f6aa5d6938caa4b71fbc702e8e314`, idéntico al original. También se comprobó visualmente la ilustración dentro del README de esa rama. Una vista previa privada por sí sola no habría demostrado acceso público.
+
 [integrity.json](integrity.json) registra ruta, tamaño y SHA-256 del PNG y de los tres SVG. El manifiesto fija la versión revisada: un cambio intencional de arte requiere revisar el resultado visual y actualizar expresamente su entrada, sin recalcular hashes de manera automática en CI.
 
 ```sh

@@ -20,6 +20,8 @@ Se conserva el PNG sin modificar. El README separa la ilustración del equipo de
 
 **Seguimiento, 20:16 UTC:** el usuario confirmó que la ilustración original seguía rota. La URL fijada al commit y la de `main` reprodujeron el 503 en Chrome; el arreglo anterior fue insuficiente. Se subió el PNG original al alojamiento de adjuntos de GitHub y se sustituyó el `src` del README por la [URL estable del adjunto](https://github.com/user-attachments/assets/7d92dfa2-2abc-4919-8c9b-512aa5b29dd5). La vista previa mostró la ilustración y el navegador decodificó 1254 × 1254 píxeles. El archivo del repositorio y su manifiesto permanecen sin cambios. Esta corrección cambia la ruta de entrega del README; no declara reparado el CDN de archivos raw.
 
+Tras publicar el adjunto en la [PR #8](https://github.com/SMarinC/Hackaton-open/pull/8), una comprobación independiente sin credenciales obtuvo `200 image/png` y los mismos 2.748.537 bytes y SHA-256 del original. Chrome mostró la ilustración en el README de la rama, con dimensiones naturales 1254 × 1254. El adjunto había devuelto 404 anónimo mientras solo existía en el borrador; no se consideró suficiente la vista previa autenticada.
+
 ### P2 · Los eventos posteriores reescribían la evidencia inicial
 
 En la base revisada, `server/store.js` actualizaba `source.duration_s` con nuevos eventos de una visita, conservando el identificador, instante y confianza del primer evento. La modificación también ocurría después de cerrar o descartar el caso y no incrementaba su versión.
