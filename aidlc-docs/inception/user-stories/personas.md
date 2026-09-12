@@ -1,15 +1,15 @@
 # Personas — PanelaTeam
 
-**Versión:** 0.1 · **Fecha:** 2026-09-12 · **Estado:** borrador de Inception para revisión.
+**Versión:** 0.2 · **Fecha:** 2026-09-12 · **Estado:** borrador de Inception para revisión.
 
-Estas personas desarrollan el [PVB](../../../docs/01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md) y acompañan el [PRD](../../../specs/prd.md). Son hipótesis de roles para tiendas de abarrotes con secciones diferenciadas; no proceden de entrevistas ni representan usuarios piloto confirmados. La redacción de estas personas e historias no implica aprobación de la etapa ni selección definitiva del escenario de demo.
+Estas personas desarrollan el [PVB v0.2](../../../docs/02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md) y acompañan el [PRD](../../../specs/prd.md). Son hipótesis de roles para tiendas de abarrotes con secciones diferenciadas; no proceden de entrevistas ni representan usuarios piloto confirmados. La redacción de estas personas e historias no implica aprobación de la etapa ni selección definitiva del escenario de demo.
 
 <a id="per-01"></a>
 ## PER-01 — Encargado de tienda
 
 **Objetivo:** convertir una señal del local en una gestión concreta, con responsable y resultado comprobable.
 
-**Trabajo propuesto:** revisar observaciones por sección, aclarar condiciones que no aparecen en los sistemas, priorizar casos, aprobar acciones dentro de sus atribuciones y revisar su cierre. Necesita reconocer de inmediato qué se observó, qué fuente comercial se consultó, qué falta confirmar y cuál es la siguiente decisión.
+**Trabajo propuesto:** definir dentro de sus atribuciones políticas para consultas, tareas y seguimiento; aclarar condiciones ausentes de los sistemas, atender excepciones y revisar resultados. No redacta ni aprueba cada mensaje rutinario del agente. Recibe preguntas/reportes y responde por Slack o correo en D0; su canal habitual comercial sigue por validar. Necesita reconocer de inmediato qué se observó, qué fuente comercial se consultó, qué falta confirmar y cuál es la siguiente decisión.
 
 **Información necesaria:** sección y período observados; evidencia y cobertura; stock con ubicación, estado y fecha; responsable de turno; propuesta, vencimiento y criterio de cierre.
 
@@ -28,7 +28,7 @@ Estas personas desarrollan el [PVB](../../../docs/01_PVB_PanelaTeam_Operacion_Ab
 
 **Trabajo propuesto:** confirmar disponibilidad en bodega cuando sea necesario, revisar ubicación y cantidad solicitadas, ejecutar tareas autorizadas y reportar resultado o impedimento. Puede ser la misma persona que el encargado en una tienda pequeña; los permisos de cada acción siguen siendo explícitos.
 
-**Información necesaria:** producto identificado o sección que debe revisar, ubicación, cantidad y unidad cuando estén sustentadas, aprobación aplicable, prioridad, instrucciones y forma de aportar evidencia.
+**Información necesaria:** producto identificado o sección que debe revisar, ubicación, cantidad y unidad cuando estén sustentadas, política o autorización puntual aplicable, prioridad, instrucciones y forma de aportar evidencia.
 
 **Permisos propuestos:** consultar y actualizar tareas asignadas, aportar confirmaciones y reportar ejecución o bloqueo. Reportar una reposición no modifica automáticamente el inventario contable ni demuestra por sí solo una verificación visual.
 
@@ -60,9 +60,9 @@ Estas personas desarrollan el [PVB](../../../docs/01_PVB_PanelaTeam_Operacion_Ab
 
 **Objetivo:** configurar fuentes, zonas, usuarios y acceso por tienda para que los resultados sean interpretables y las acciones respeten sus permisos.
 
-**Trabajo propuesto:** registrar procedencia, configurar secciones y geometría de zonas, versionar cambios, asignar roles y responsables y comprobar salud de fuentes. En la demo administra un archivo de internet, fixtures y una bandeja interna. La conexión directa a cámaras, POS e inventario reales corresponde al piloto y depende de compatibilidad y acceso confirmados.
+**Trabajo propuesto:** registrar procedencia, configurar secciones y geometría de zonas, versionar cambios, asignar roles y responsables y comprobar salud de fuentes. En D0 administra un archivo de internet, fixtures y conexiones reales de prueba Slack/correo con envío y recepción, directorio y políticas previamente autorizadas. Las cuentas de prueba aún no están disponibles; debe configurarlas y verificarlas antes de acreditar integración. La conexión directa a cámaras, POS e inventario reales corresponde al piloto y depende de compatibilidad y acceso confirmados.
 
-**Información necesaria:** identificadores de fuente/tienda, períodos y zona horaria, derechos o condiciones de reutilización del material, configuración vigente, estado de conexión, directorio y políticas de acceso. Para el piloto también serán necesarias las decisiones sobre acceso y retención de evidencia.
+**Información necesaria:** identificadores de fuente/tienda, períodos y zona horaria, derechos o condiciones de reutilización del material, configuración vigente, estado de conexión, cuentas, facultades de envío/recepción, directorio, políticas de autonomía, escalamiento y acceso. Para el piloto también serán necesarias las decisiones sobre acceso y retención de evidencia.
 
 **Permisos propuestos:** administrar configuración dentro de las tiendas asignadas. Administrar la instalación no concede de forma automática autoridad comercial ni acceso irrestricto a todas las tiendas.
 
@@ -75,6 +75,7 @@ Estas personas desarrollan el [PVB](../../../docs/01_PVB_PanelaTeam_Operacion_Ab
 ## Acuerdos pendientes que afectan a las personas
 
 - Seleccionar el escenario prioritario de demo y confirmar quién representa cada rol.
-- Identificar tienda piloto, responsables reales, turnos, facultades de aprobación y canal de comunicación.
+- Configurar cuentas de prueba aún ausentes, destinatarios, permisos de envío/recepción e identidades para Slack/correo elegidos en D0.
+- Identificar tienda piloto, responsables reales, turnos, políticas/facultades y canales adecuados para su operación.
 - Observar el proceso actual y acordar línea base, métricas y criterio de continuidad.
 - Confirmar acceso a cámaras, POS, inventario y catálogo sin asumir que ya existen integraciones.
