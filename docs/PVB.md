@@ -2,6 +2,8 @@
 
 **Borrador de diseño · v0.1 · 12 de septiembre de 2026**
 
+Este es el resumen del diseño. El [PVB completo — Operación para tiendas de abarrotes v0.1](01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md) contiene las 13 secciones, el diagrama de arquitectura y el detalle de métricas, permisos y evaluación.
+
 ## Estado y propósito
 
 Está confirmado el equipo **PanelaTeam**, el segmento **tiendas de abarrotes con secciones diferenciadas** y el uso de **imágenes y videos de internet para la demo**. La visión solicitada conecta cámaras, estructura observaciones y coordina agentes con las personas responsables de stock, exhibiciones y promociones.
