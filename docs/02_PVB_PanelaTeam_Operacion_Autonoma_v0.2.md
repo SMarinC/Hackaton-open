@@ -6,6 +6,8 @@
 
 **Panela Stocks** es el nombre confirmado de la solución; **PanelaTeam** es el equipo desarrollador. Esta versión reemplaza la visión operativa vigente de [v0.1](01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md), que se conserva como antecedente. El [PRD](../specs/prd.md) mantiene los requisitos verificables; [método](../specs/process.md), [revisión del concurso](research/02_Bases_y_Estrategia_PanelaTeam_v0.2.md) y [misiones para Perplexity](research/03_Perplexity_Misiones_PanelaTeam_v0.2.md) acompañan la decisión. El [README](../README.md) registra la aplicación parcial ya construida; los canales bidireccionales siguen pendientes. El resto de este borrador conserva las propuestas y dependencias de su elaboración, que deben contrastarse con ese estado vigente.
 
+**Arquitectura objetivo:** la [adenda de agentes y comunicaciones](architecture/target.md) incorpora la dirección solicitada de contenedores portables entre nubes, inferencia intercambiable y búsqueda web opcional. Conserva los requisitos D0 y distingue propuesta de implementación.
+
 ## Qué cambia y qué está confirmado
 
 Se conservan equipo PanelaTeam, tiendas de abarrotes con secciones diferenciadas y material de internet para la demo. La nueva instrucción exige mayor independencia, interacción externa y reportes al menos por Slack y correo. **El usuario confirmó que aún no hay cuentas de prueba.**

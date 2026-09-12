@@ -56,6 +56,10 @@ Un agente observa situaciones de una tienda y lleva adelante gestiones con sus r
 
 El segmento inicial son tiendas de abarrotes con secciones diferenciadas. La visión incluye disponibilidad en exhibición, uso del espacio, desempeño comercial y evaluación de promociones.
 
+## Arquitectura objetivo
+
+La [arquitectura de agentes, comunicaciones y contenedores](docs/architecture/target.md) define percepción local, coordinación de casos, verificación, reportes y Slack/correo bidireccionales. Propone imágenes OCI portables entre nubes, con un primer despliegue en una sola nube y restauración comprobada antes de operar en otra. OpenRouter se evalúa para enrutar inferencia; Exa para búsqueda e investigación web opcional. Es diseño objetivo, no infraestructura ni proveedores conectados.
+
 ## Ciclo completo objetivo
 
 1. Observar permanencia por zona y pedir una revisión, o identificar un posible faltante cuando una fuente futura lo permita con evidencia suficiente.
