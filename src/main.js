@@ -318,7 +318,9 @@ async function refreshState() {
       const value = state.channels?.[channel];
       $(`${channel}-status`).textContent = value?.configured
         ? value.send_enabled && value.recipient_allowed
-          ? "Salida habilitada · entrada pendiente"
+          ? value.auto_send
+            ? "Envío automático habilitado · entrada pendiente"
+            : "Salida habilitada (envío manual) · entrada pendiente"
           : "Salida configurada; envío restringido · entrada pendiente"
         : "Pendiente de conexión";
     }
@@ -521,6 +523,33 @@ $("cases").addEventListener("click", (event) => {
     `Video pausado en ${clock(mediaTime)}. El expediente conserva la observación original; no se ejecutó una nueva verificación.`;
   $("video-sheet").scrollIntoView({ block: "start" });
   video.focus({ preventScroll: true });
+});
+$("cases").addEventListener("click", async (event) => {
+  const button = event.target.closest(".send-message");
+  if (!button) return;
+  button.disabled = true;
+  $("case-feedback").textContent = "Enviando mensaje…";
+  try {
+    const { message } = await api(
+      `/outbox/${encodeURIComponent(button.dataset.message)}/send`,
+      {},
+    );
+    $("case-feedback").textContent =
+      message.status === "provider_accepted"
+        ? "Mensaje aceptado por el proveedor. La entrega y la lectura no están confirmadas."
+        : `No se envió: ${message.error || message.status}`;
+  } catch (err) {
+    $("case-feedback").textContent = `No se pudo enviar: ${err.message}`;
+  } finally {
+    button
+      .closest(".case-item")
+      ?.querySelectorAll("details[open]")
+      .forEach((details) => {
+        details.open = false;
+      });
+    stateFingerprint = "";
+    await refreshState();
+  }
 });
 $("cases").addEventListener("submit", async (event) => {
   event.preventDefault();

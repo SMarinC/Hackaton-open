@@ -323,10 +323,26 @@ function renderManifest(item, timeline, messages) {
         isMessage && hasText(entry.provider_id)
           ? `<span class="entry-meta">Referencia del proveedor: <span class="mono">${escape(entry.provider_id)}</span></span>`
           : "";
+      const reason =
+        isMessage && hasText(entry.error)
+          ? `<span class="entry-meta entry-error">Motivo: ${escape(entry.error)}</span>`
+          : "";
+      const retry =
+        isMessage &&
+        entry.status === "failed" &&
+        instant(entry.next_attempt_at) !== null
+          ? `<span class="entry-meta">Reintento automático: ${wallTime(entry.next_attempt_at)}</span>`
+          : isMessage && entry.status === "failed" && entry.auto_attempts > 0
+            ? `<span class="entry-meta">Reintentos automáticos agotados; se reactivan al cambiar la configuración.</span>`
+            : "";
+      const send =
+        isMessage && entry.can_send === true && hasText(entry.id)
+          ? `<button class="quiet send-message" type="button" data-message="${escape(entry.id)}">${["failed", "result_unknown"].includes(entry.status) ? "Reintentar envío" : "Enviar ahora"}</button>`
+          : "";
       return `<tr data-entry-kind="${kind}" data-entry-id="${escape(entry.id || "")}">
       <td class="col-lane">${lane(origin)}</td>
       <td class="col-time">${wallTime(at)}</td>
-      <td class="col-entry"><strong>${escape(label)}</strong><span class="entry-state">${escape(state.label)}</span>${detailHtml}${updated}${provider}</td>
+      <td class="col-entry"><strong>${escape(label)}</strong><span class="entry-state">${escape(state.label)}</span>${detailHtml}${updated}${provider}${reason}${retry}${send}</td>
       <td class="col-mark" aria-hidden="true">${mark(state.mark)}</td>
     </tr>`;
     })

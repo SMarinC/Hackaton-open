@@ -1,10 +1,17 @@
 import { createServer } from "node:http";
 import { readFile, realpath, stat } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync, unwatchFile, watchFile } from "node:fs";
+import { parseEnv } from "node:util";
 import { dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { ApiError, createStore } from "./store.js";
-import { displayOutbox, publicChannels, sendOutbox } from "./channels.js";
+import {
+  createOutboxWorker,
+  dispatchCase,
+  displayOutbox,
+  publicChannels,
+  sendOutbox,
+} from "./channels.js";
 import { coordinate, coordinatorMode } from "./coordinator.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -70,14 +77,27 @@ export function createHandler({
   fetchImpl = fetch,
   staticDir = resolve(root, "dist"),
 }) {
-  return async (request, response) => {
+  // Provider calls can take up to 10 s each; dispatch after responding so the
+  // browser is not blocked. `handler.idle()` lets tests await the queue.
+  const pending = new Set();
+  const background = (promise) => {
+    const task = promise.catch(() => {}).finally(() => pending.delete(task));
+    pending.add(task);
+  };
+  const handler = async (request, response) => {
     try {
       checkLocalRequest(request);
       const url = new URL(request.url, "http://127.0.0.1");
       if (url.pathname === "/api/state" && request.method === "GET") {
+        const cases = store.listCases();
+        const versions = new Map(cases.map((item) => [item.id, item.version]));
         return json(response, 200, {
-          cases: store.listCases(),
-          outbox: store.listOutbox().map((item) => displayOutbox(item, env)),
+          cases,
+          outbox: store
+            .listOutbox()
+            .map((item) =>
+              displayOutbox(item, env, versions.get(item.case_id)),
+            ),
           channels: publicChannels(env),
           coordinator: {
             mode: coordinatorMode(env),
@@ -94,6 +114,7 @@ export function createHandler({
             result.case.version,
             decision,
           );
+          background(dispatchCase(store, result.case.id, { env, fetchImpl }));
         }
         return json(response, result.created ? 201 : 200, result);
       }
@@ -109,6 +130,7 @@ export function createHandler({
             result.case.version,
             decision,
           );
+          background(dispatchCase(store, result.case.id, { env, fetchImpl }));
         }
         return json(response, 200, result);
       }
@@ -162,6 +184,8 @@ export function createHandler({
       else response.end();
     }
   };
+  handler.idle = () => Promise.allSettled([...pending]);
+  return handler;
 }
 
 export function startServer({ env = process.env } = {}) {
@@ -172,12 +196,28 @@ export function startServer({ env = process.env } = {}) {
     inventoryFixture: env.PANELA_INVENTORY_FIXTURE ?? "unknown",
   });
   const server = createServer(createHandler({ store, env }));
-  server.listen(Number(env.PORT ?? 8787), "127.0.0.1", () =>
+  const worker = createOutboxWorker(store, {
+    env,
+    onResult: (results) => {
+      for (const item of results) {
+        if (item.skipped) continue;
+        console.log(
+          `Envío automático · ${item.channel} ${item.intent} → ${item.status}${item.provider_error ? ` (${item.provider_error})` : ""}${item.next_attempt_at ? ` · reintento ${item.next_attempt_at}` : ""}`,
+        );
+      }
+    },
+  });
+  server.outboxWorker = worker;
+  server.listen(Number(env.PORT ?? 8787), "127.0.0.1", () => {
     console.log(
       `Panela Stocks API disponible en http://127.0.0.1:${server.address().port}`,
-    ),
-  );
-  server.on("close", () => store.close());
+    );
+    worker.start();
+  });
+  server.on("close", () => {
+    worker.stop();
+    store.close();
+  });
   return server;
 }
 
@@ -186,8 +226,32 @@ if (
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
   const envFile = resolve(root, ".env");
-  if (existsSync(envFile)) process.loadEnvFile(envFile);
+  let envKeys = new Set();
+  if (existsSync(envFile)) {
+    process.loadEnvFile(envFile);
+    envKeys = new Set(Object.keys(parseEnv(readFileSync(envFile, "utf8"))));
+  }
   const server = startServer();
+  // Send flags, recipients and credentials are read per request, so a changed
+  // .env applies without restarting. watchFile polls only this file: a
+  // directory watcher on Windows also fires on SQLite writes and loops.
+  watchFile(envFile, { interval: 1000 }, (current, previous) => {
+    if (current.mtimeMs === previous.mtimeMs) return;
+    try {
+      const next = parseEnv(readFileSync(envFile, "utf8"));
+      for (const key of envKeys) if (!(key in next)) delete process.env[key];
+      Object.assign(process.env, next);
+      envKeys = new Set(Object.keys(next));
+      const reactivated = server.outboxWorker.resetBackoff();
+      console.log(
+        `Cambió .env · credenciales, destinatarios y banderas de envío recargados; ${reactivated} envío(s) fallido(s) vuelven a intentarse (PORT y PANELA_DB_PATH requieren reiniciar).`,
+      );
+      server.outboxWorker.tick().catch(() => {});
+    } catch {
+      console.log("No se pudo leer .env; se conservan los valores anteriores.");
+    }
+  });
+  server.on("close", () => unwatchFile(envFile));
   for (const signal of ["SIGINT", "SIGTERM"])
     process.once(signal, () => server.close());
 }

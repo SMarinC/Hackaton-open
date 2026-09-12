@@ -12,6 +12,7 @@ import {
   sendOutbox,
   publicChannels,
   displayOutbox,
+  createOutboxWorker,
 } from "../server/channels.js";
 import { coordinate, coordinatorMode } from "../server/coordinator.js";
 
@@ -649,6 +650,277 @@ test("Slack treats user-provided zone text as literal instead of broadcast menti
   });
   assert.doesNotMatch(text, /<!channel>/);
   assert.match(text, /&lt;!channel&gt; &amp; abarrotes/);
+});
+
+test("a definitive provider refusal keeps its error code and can be resent once fixed", async (t) => {
+  const store = memory(t);
+  store.ingest(event());
+  const id = store.listOutbox()[0].id;
+  const failed = await sendOutbox(store, id, {
+    env: liveEnv,
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ ok: false, error: "invalid_auth" }),
+    }),
+  });
+  assert.equal(failed.status, "failed");
+  assert.equal(failed.provider_error, "invalid_auth");
+  assert.match(failed.error, /invalid_auth/);
+  assert.equal(
+    displayOutbox(failed, liveEnv, store.getCase(failed.case_id).version)
+      .can_send,
+    true,
+  );
+  const sent = await sendOutbox(store, id, {
+    env: liveEnv,
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ ok: true, ts: "999.1" }),
+    }),
+  });
+  assert.equal(sent.status, "provider_accepted");
+  assert.equal(sent.attempts, 2);
+  assert.equal(sent.error, null);
+});
+
+test("rate limits are retryable failures and free-text provider messages never leak", async (t) => {
+  const store = memory(t);
+  const id = store.ingest(event()).case.id;
+  observe(store, id, {
+    kind: "no_stock",
+    note: "Sin stock de prueba",
+    shelf_issue_confirmed: true,
+  });
+  const mail = store.listOutbox().find((item) => item.channel === "email");
+  const limited = await sendOutbox(store, mail.id, {
+    env: liveEnv,
+    fetchImpl: async () => ({
+      ok: false,
+      status: 429,
+      json: async () => ({
+        name: "rate_limit_exceeded",
+        message: "Too many requests for owner@private.invalid",
+      }),
+    }),
+  });
+  assert.equal(limited.status, "failed");
+  assert.equal(limited.provider_error, "rate_limit_exceeded");
+  assert.match(limited.error, /429/);
+  assert.doesNotMatch(limited.error, /private\.invalid/);
+  assert.equal(
+    displayOutbox(limited, liveEnv, store.getCase(id).version).can_send,
+    true,
+  );
+});
+
+test("an uncertain email is resent with the same idempotency key only inside Resend's window", async (t) => {
+  let clock = "2026-09-12T10:00:00.000Z";
+  const store = createStore({ filename: ":memory:", now: () => clock });
+  t.after(() => store.close());
+  const queueEmail = (runId) => {
+    const id = store.ingest(event({ run_id: runId })).case.id;
+    observe(store, id, {
+      kind: "no_stock",
+      note: "Sin stock de prueba",
+      shelf_issue_confirmed: true,
+    });
+    return store
+      .listOutbox()
+      .find((item) => item.channel === "email" && item.case_id === id);
+  };
+  const timeout = async () => {
+    throw new Error("timeout");
+  };
+  const keys = [];
+  const accept = async (_url, request) => {
+    keys.push(request.headers["Idempotency-Key"]);
+    return { ok: true, json: async () => ({ id: "email_retry" }) };
+  };
+
+  const recent = queueEmail("run-recent");
+  const stale = queueEmail("run-stale");
+  assert.equal(
+    (await sendOutbox(store, recent.id, { env: liveEnv, fetchImpl: timeout }))
+      .status,
+    "result_unknown",
+  );
+  assert.equal(
+    (await sendOutbox(store, stale.id, { env: liveEnv, fetchImpl: timeout }))
+      .status,
+    "result_unknown",
+  );
+
+  clock = "2026-09-12T20:00:00.000Z";
+  const retried = await sendOutbox(store, recent.id, {
+    env: liveEnv,
+    fetchImpl: accept,
+  });
+  assert.equal(retried.status, "provider_accepted");
+  assert.deepEqual(keys, [recent.operation_key]);
+
+  clock = "2026-09-13T11:00:00.000Z";
+  await assert.rejects(
+    sendOutbox(store, stale.id, { env: liveEnv, fetchImpl: accept }),
+    (error) => error.status === 409,
+  );
+  assert.equal(keys.length, 1);
+});
+
+test("internal reports never reuse the external supplier address", async (t) => {
+  const store = memory(t);
+  const id = store.ingest(event()).case.id;
+  observe(store, id, { kind: "no_issue", note: "Nota interna del operador" });
+  const report = store
+    .listOutbox()
+    .find((item) => item.channel === "email" && item.intent === "report");
+  let calls = 0;
+  await assert.rejects(
+    sendOutbox(store, report.id, {
+      env: liveEnv,
+      fetchImpl: async () => {
+        calls += 1;
+      },
+    }),
+    (error) =>
+      error.status === 409 && /PANELA_EMAIL_REPORT_TO/.test(error.message),
+  );
+  assert.equal(calls, 0);
+  const reportEnv = {
+    ...liveEnv,
+    PANELA_EMAIL_REPORT_TO: "encargado@example.invalid",
+    PANELA_ALLOWED_EMAIL_RECIPIENTS:
+      "operator@example.invalid,encargado@example.invalid",
+  };
+  let to;
+  const sent = await sendOutbox(store, report.id, {
+    env: reportEnv,
+    fetchImpl: async (_url, request) => {
+      to = JSON.parse(request.body).to;
+      return { ok: true, json: async () => ({ id: "email_report" }) };
+    },
+  });
+  assert.deepEqual(to, ["encargado@example.invalid"]);
+  assert.equal(sent.recipient, "encargado@example.invalid");
+});
+
+test("auto-send dispatches new messages in the background, is off by default and never auto-retries", async (t) => {
+  const quietStore = memory(t);
+  const quiet = createHandler({
+    store: quietStore,
+    env: liveEnv,
+    fetchImpl: async () => {
+      throw new Error("must not send without PANELA_AUTO_SEND");
+    },
+  });
+  await call(quiet, "POST", "/api/events", event());
+  await quiet.idle();
+  assert.equal(quietStore.listOutbox()[0].attempts, 0);
+
+  const store = memory(t);
+  const urls = [];
+  const handler = createHandler({
+    store,
+    env: { ...liveEnv, PANELA_AUTO_SEND: "true" },
+    fetchImpl: async (url) => {
+      urls.push(url);
+      return {
+        ok: true,
+        json: async () => ({ ok: false, error: "not_in_channel" }),
+      };
+    },
+  });
+  assert.equal((await call(handler, "POST", "/api/events", event())).status, 201);
+  await handler.idle();
+  assert.deepEqual(urls, ["https://slack.com/api/chat.postMessage"]);
+  assert.equal(store.listOutbox()[0].status, "failed");
+  assert.equal(store.listOutbox()[0].provider_error, "not_in_channel");
+
+  await call(
+    handler,
+    "POST",
+    "/api/events",
+    event({ event_id: "event-2", run_id: "run-2" }),
+  );
+  await handler.idle();
+  assert.equal(urls.length, 2, "only the new case's message is dispatched");
+  const state = await call(handler, "GET", "/api/state");
+  assert.equal(state.payload.channels.slack.auto_send, true);
+  assert.ok(state.payload.outbox.every((item) => item.can_send === true));
+});
+
+test("the outbox worker retries refusals with backoff up to a limit and restarts after a config change", async (t) => {
+  const start = Date.parse("2026-09-12T10:00:00.000Z");
+  let clock = start;
+  const store = memory(t);
+  store.ingest(event());
+  let calls = 0;
+  let reply = { ok: false, error: "not_in_channel" };
+  const worker = createOutboxWorker(store, {
+    env: { ...liveEnv, PANELA_AUTO_SEND: "true" },
+    now: () => clock,
+    fetchImpl: async () => {
+      calls += 1;
+      return { ok: true, json: async () => reply };
+    },
+  });
+  const [first] = await worker.tick();
+  assert.equal(first.status, "failed");
+  assert.equal(first.auto_attempts, 1);
+  assert.equal(first.next_attempt_at, "2026-09-12T10:01:00.000Z");
+  await worker.tick();
+  assert.equal(calls, 1, "not retried before its backoff elapses");
+  for (const minutes of [1, 3, 7, 15]) {
+    clock = start + minutes * 60_000;
+    await worker.tick();
+  }
+  assert.equal(calls, 5);
+  const exhausted = store.listOutbox()[0];
+  assert.equal(exhausted.auto_attempts, 5);
+  assert.equal(exhausted.next_attempt_at, null);
+  clock += 60 * 60_000;
+  await worker.tick();
+  assert.equal(calls, 5, "stops at the automatic retry limit");
+
+  reply = { ok: true, ts: "1.2" };
+  assert.equal(worker.resetBackoff(), 1);
+  const [sent] = await worker.tick();
+  assert.equal(sent.status, "provider_accepted");
+  assert.equal(calls, 6);
+});
+
+test("the outbox worker is off without auto-send, never overlaps and skips obsolete or unroutable messages", async (t) => {
+  const store = memory(t);
+  const id = store.ingest(event()).case.id;
+  observe(store, id, { kind: "no_issue", note: "Descarte de prueba" });
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    return { ok: true, json: async () => ({ ok: true, ts: "5.6" }) };
+  };
+  const off = createOutboxWorker(store, { env: liveEnv, fetchImpl });
+  assert.deepEqual(await off.tick(), []);
+  assert.equal(calls, 0);
+
+  const worker = createOutboxWorker(store, {
+    env: { ...liveEnv, PANELA_AUTO_SEND: "true" },
+    fetchImpl,
+  });
+  const [results, overlapping] = await Promise.all([
+    worker.tick(),
+    worker.tick(),
+  ]);
+  assert.deepEqual(overlapping, []);
+  assert.equal(calls, 1);
+  const byIntent = (channel, intent) =>
+    store
+      .listOutbox()
+      .find((item) => item.channel === channel && item.intent === intent);
+  assert.equal(byIntent("slack", "report").status, "provider_accepted");
+  assert.equal(byIntent("slack", "ask_review").status, "cancelled");
+  assert.equal(byIntent("email", "report").attempts, 0);
+  assert.ok(
+    results.some((item) => /PANELA_EMAIL_REPORT_TO/.test(item.skipped ?? "")),
+  );
 });
 
 test("a sending operation recovered after restart stays uncertain", () => {

@@ -479,3 +479,28 @@ test("legacy evidence is disclosed without treating source integrity as detector
   assert.match(current, /no es exactitud validada/);
   assert.match(current, /Permanencia registrada/);
 });
+
+test("only server-approved messages get an escaped send or retry control, with the provider reason", () => {
+  const html = renderCase(base(), [
+    message({ id: 'm"1', can_send: true, status: "ready" }),
+    message({
+      id: "m2",
+      can_send: true,
+      status: "failed",
+      error: "Slack rechazó el envío (not_in_channel); no se entregó.",
+      created_at: "2026-09-12T16:05:00Z",
+    }),
+    message({
+      id: "m3",
+      can_send: false,
+      status: "result_unknown",
+      created_at: "2026-09-12T16:06:00Z",
+    }),
+    message({ id: "m4", status: "ready", created_at: "2026-09-12T16:07:00Z" }),
+  ]);
+  assert.equal((html.match(/class="quiet send-message"/g) || []).length, 2);
+  assert.match(html, /data-message="m&quot;1">Enviar ahora</);
+  assert.match(html, /data-message="m2">Reintentar envío</);
+  assert.doesNotMatch(html, /data-message="m3"|data-message="m4"/);
+  assert.match(html, /Motivo: Slack rechazó el envío \(not_in_channel\)/);
+});

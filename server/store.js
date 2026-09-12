@@ -13,6 +13,29 @@ export class ApiError extends Error {
 const hash = (value) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const terminal = new Set(["closed", "discarded"]);
+
+// "failed" means the provider definitively refused (4xx / Slack ok:false), so
+// nothing was delivered and a resend cannot duplicate.
+const SENDABLE = new Set([
+  "pending_connection",
+  "ready",
+  "send_disabled",
+  "blocked_recipient",
+  "failed",
+]);
+// Resend deduplicates an Idempotency-Key for 24 h, so an uncertain email can be
+// retried safely inside that window. Slack has no such key: never retried blind.
+const UNKNOWN_EMAIL_RETRY_MS = 23 * 60 * 60 * 1000;
+export function isSendable(item, nowMs = Date.now()) {
+  if (SENDABLE.has(item.status)) return true;
+  const firstAttempt = Date.parse(item.first_attempt_at ?? item.updated_at);
+  return (
+    item.status === "result_unknown" &&
+    item.channel === "email" &&
+    Number.isFinite(firstAttempt) &&
+    nowMs - firstAttempt < UNKNOWN_EMAIL_RETRY_MS
+  );
+}
 const text = (value, name, max = 160) => {
   if (typeof value !== "string" || !value.trim() || value.length > max) {
     throw new ApiError(400, `${name} debe ser texto de 1 a ${max} caracteres.`);
@@ -516,17 +539,10 @@ export function createStore({
         if (!item) throw new ApiError(404, "Mensaje no encontrado.");
         if (item.status === "provider_accepted")
           return { item, alreadySent: true };
-        if (
-          ![
-            "pending_connection",
-            "ready",
-            "send_disabled",
-            "blocked_recipient",
-          ].includes(item.status)
-        ) {
+        if (!isSendable(item, Date.parse(now()))) {
           throw new ApiError(
             409,
-            "Mensaje no enviable; no se reintenta un resultado incierto.",
+            "Mensaje no enviable; no se reintenta a ciegas un resultado incierto de Slack.",
           );
         }
         const parent = getCase(item.case_id);
@@ -537,6 +553,7 @@ export function createStore({
           );
         item.status = "sending";
         item.recipient = recipient;
+        item.first_attempt_at ??= now();
         item.attempts += 1;
         item.updated_at = now();
         saveOutbox(item);
@@ -553,6 +570,31 @@ export function createStore({
         });
         saveOutbox(item);
         return item;
+      });
+    },
+    scheduleRetry(id, { auto_attempts, next_attempt_at }) {
+      return transaction(() => {
+        const item = getOutbox(id);
+        if (!item) throw new ApiError(404, "Mensaje no encontrado.");
+        Object.assign(item, { auto_attempts, next_attempt_at });
+        saveOutbox(item);
+        return item;
+      });
+    },
+    // After a configuration change (new token, recipient, flags) refusals may
+    // now succeed, so automatic retries start over for every failed message.
+    resetAutoRetries() {
+      return transaction(() => {
+        let count = 0;
+        for (const row of db.prepare("SELECT data FROM outbox").all()) {
+          const item = parse(row);
+          if (item.status !== "failed") continue;
+          item.auto_attempts = 0;
+          item.next_attempt_at = null;
+          saveOutbox(item);
+          count += 1;
+        }
+        return count;
       });
     },
   };
