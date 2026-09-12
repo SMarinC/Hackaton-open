@@ -79,3 +79,27 @@ Se integró el nuevo commit y se regeneró la mesa con video y caso simultáneos
 La revisión del nuevo panel estático detectó afirmaciones de casos/cola reales, una fotografía inexistente, mensajes anteriores sin cancelar y una tarea inventada en la rama sin stock. Se corrigieron como ejemplos explícitamente ficticios que respetan las reglas del backend. El reporte y su CSS ahora entran en el build multipágina; el handler de producción devuelve 200 y MIME correcto para ambos. Los enlaces documentales apuntan a GitHub.
 
 Verificación final: 53 pruebas aprobadas, build correcto y controles funcionales preservados. Se comprobó visualmente en Chrome la mesa de dos columnas, el caso cerrado conservado, su recorrido `Revisión → Reposición asignada → Cierre humano`, el salto a 00:17.0 y el ciclo objetivo con etapas sin registro explícitas. Las cuentas externas siguen pendientes y no se hicieron envíos. La adaptación móvil se implementó en CSS; esta captura no declara una auditoría de dispositivo ni certificación de accesibilidad.
+
+## 2026-09-12 19:47:12 UTC — Nombre de la solución confirmado
+
+El usuario confirmó que el equipo se llama **PanelaTeam** y corrigió el nombre de la solución a **Panela Stocks**. Después solicitó actualizar los documentos y fusionar el cambio en GitHub. Esta decisión sustituye el campo «nombre comercial pendiente» del PVB y del PRD.
+
+Se actualizaron README, PRODUCT, DESIGN, PVB vigente/resumen, PRD, método y registros de Inception. El PVB v0.1 y las investigaciones conservan su contenido histórico con notas que aclaran la identidad actual. Se mantienen las rutas y la ilustración del equipo. El cambio es documental y no modifica capacidades, requisitos ni código de la demo.
+
+Verificación: revisión independiente sin hallazgos bloqueantes, 145 destinos de enlaces locales comprobados en 21 documentos Markdown, bloques de código equilibrados y `git diff --check` sin errores. La publicación se tramita por PR con las comprobaciones de CI; el resultado de la fusión queda registrado en GitHub.
+
+## 2026-09-12 20:02:43 UTC — Auditoría de integridad y logo Panela Stocks
+
+El usuario pidió auditar el repositorio, investigar la imagen publicada e integrar el logo aportado. La comprobación remota/local descartó una diferencia de bytes; Chrome reprodujo un 503 del CDN. Se conserva el PNG original y se incorpora una adaptación SVG de la marca en README, app y reporte.
+
+Se corrigió la mutación silenciosa de evidencia inicial por eventos posteriores, con payloads separados, migración aditiva y advertencia para históricos sin procedencia recuperable. La base pasó integrity_check y foreign_key_check; se creó copia privada antes de reiniciar la demo. Pasaron 56 pruebas, build y control de 4 assets más 3 copias. El informe reproducible está en [auditoría de integridad y marca](../docs/audits/2026-09-12-integridad-y-marca.md).
+
+Durante esta revisión el usuario añadió la arquitectura objetivo con agentes, comunicaciones, contenedores multicloud y OpenRouter/Exa. Se incorporó [target.md](../docs/architecture/target.md) con diagramas, estado actual frente a objetivo, controles de autonomía y fases. Las fuentes oficiales distinguen OpenRouter como enrutamiento de inferencia y Exa como búsqueda/investigación. No se contrató infraestructura ni se conectaron proveedores.
+
+## 2026-09-12 20:16:11 UTC — Corrección de entrega de la ilustración original
+
+El usuario confirmó que la imagen rota era la ilustración de PanelaTeam del inicio. Se reprodujo el fallo del CDN tanto en la URL raw fijada a un commit como en la de main; la fijación anterior no resolvió la visualización. El PNG local conserva el SHA-256 registrado y no se regenera ni se modifica.
+
+Se cargó el archivo original como adjunto de GitHub mediante su selector nativo de archivos, sin cambiar permisos del navegador. La vista previa mostró la ilustración y decodificó 1254 × 1254 píxeles. Se actualiza el README con la URL estable del adjunto, conservando el archivo versionado, el manifiesto y la procedencia. La publicación y comprobación del README final se tramitan por PR y merge bajo la autorización previa del usuario.
+
+La PR #8 publicó el adjunto y permitió verificarlo sin autenticación: `200 image/png`, 2.748.537 bytes e igualdad byte por byte con el PNG local. Chrome mostró la imagen dentro del README de la rama, con dimensiones naturales de 1254 × 1254. La revisión independiente no encontró bloqueantes en el diff documental. `git diff --check` y el control de 4 assets originales más 3 copias de build pasaron; la fusión queda sujeta a las comprobaciones de CI del último commit.

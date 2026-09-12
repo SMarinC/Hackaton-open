@@ -1,5 +1,5 @@
 {
-  "name": "panelastocks-video-operations",
+  "name": "panela-stocks",
   "version": "0.3.0",
   "private": true,
   "type": "module",
@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "build": "vite build",
+    "check:assets": "node scripts/verify-assets.mjs",
     "start": "node --env-file-if-exists=.env server/index.js",
     "test": "node --test tests/*.test.js"
   },

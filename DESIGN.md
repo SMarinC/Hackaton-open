@@ -1,5 +1,5 @@
 ---
-name: PanelaStocks
+name: Panela Stocks
 description: Centro de operación cálido y denso en datos — video, zonas y casos en una sola mesa de trabajo.
 colors:
   accent: "oklch(47% 0.1 47)"
@@ -74,13 +74,21 @@ components:
     rounded: "{rounded.sm}"
 ---
 
-# Design System: PanelaStocks
+# Design System: Panela Stocks
+
+Solución: **Panela Stocks** · Equipo: **PanelaTeam**.
+
+## Marca de la solución
+
+El usuario aportó la referencia «Local en cuadro»: toldo dentro de un marco de video, terracota y verde salvia. `public/brand/panela-stocks-icon.svg` contiene el símbolo; `panela-stocks-logo.svg` y `panela-stocks-logo-inverse.svg` contienen el nombre **Panela Stocks**, con espacio y contornos tipográficos, sin cargar una fuente externa. Son adaptaciones vectoriales de la captura, no el archivo vectorial original. El punto de la marca es decorativo; el estado real de sesión y canales siempre se comunica por separado con texto.
+
+El logo se presenta a 200 px de ancho en cabeceras (160 px en la app en pantallas de hasta 620 px), con proporción conservada. La ilustración de Medellín pertenece a **PanelaTeam** y se conserva como material del equipo, separada del logo de la solución. Véase [procedencia](assets/README.md).
 
 ## Overview
 
 **Creative North Star: "La mesa de operación"**
 
-PanelaStocks es un centro de operación denso, no una landing ni un dashboard de vanidad: video con overlay de detección a la izquierda, mesa de coordinación de casos a la derecha, registro de observaciones abajo — todo visible a la vez, sin modales ni pasos ocultos. La paleta es papel cálido y tinta café, no gris-azul de SaaS genérico; la densidad de información es alta y deliberada, con tipografía de sistema (sin webfont cargada) que prioriza legibilidad y arranque instantáneo sobre personalidad tipográfica.
+Panela Stocks es un centro de operación denso, no una landing ni un dashboard de vanidad: video con overlay de detección a la izquierda, mesa de coordinación de casos a la derecha, registro de observaciones abajo — todo visible a la vez, sin modales ni pasos ocultos. La paleta es papel cálido y tinta café, no gris-azul de SaaS genérico; la densidad de información es alta y deliberada, con tipografía de sistema (sin webfont cargada) que prioriza legibilidad y arranque instantáneo sobre personalidad tipográfica.
 
 Este documento reemplaza una versión anterior que documentaba únicamente `demo/panel.html`, una exploración construida antes de que este sistema existiera en código. Ese archivo fue reescrito para extender esta misma identidad — ver su nota en `demo/panel.html`.
 
@@ -139,7 +147,7 @@ Paleta cálida de papel y tinta café en OKLCH; el color de estado (ámbar/verde
 
 ## Layout
 
-Contenedor principal `max-width: 1600px`, centrado, `padding: 32px 40px 0`. Topbar fija de 70px con marca a la izquierda y tag de build a la derecha. Cuerpo en grid de dos columnas: video (`minmax(0,1fr)`) + mesa de operación (350px, 390px en ≥1500px, 310px en ≤1100px), `gap: 26–32px`. Registro de eventos corre a ancho completo debajo, con scroll interno (`max-height: 270px`) en vez de paginación. En ≤1100px el padding del contenedor y de la mesa se reduce, pero el grid de dos columnas no colapsa a una sola — este sistema no tiene todavía un layout de una columna para mobile real.
+Contenedor principal `max-width: 1600px`, centrado, `padding: 32px 40px 0`. Topbar fija de 70px con marca a la izquierda y acciones a la derecha. Cuerpo en grid de dos columnas: video (`minmax(0,1fr)`) y mesa de operación de 480px, 500px en ≥1500px y 390px en ≤1100px. En ≤900px la mesa se apila en una columna. En ≤620px se reducen espaciados y se ocultan subtítulo y contador de la cabecera para mantener marca y exportación legibles. El registro de eventos tiene scroll interno. Las reglas vigentes se encuentran en `src/style.css`.
 
 ## Elevation & Depth
 

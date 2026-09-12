@@ -1,4 +1,6 @@
-# PanelaTeam — resumen del PVB v0.2
+# Panela Stocks — resumen del PVB v0.2
+
+**Solución:** Panela Stocks · **Equipo:** PanelaTeam.
 
 **Product Vision Board · Borrador vigente: operación autónoma de tiendas de abarrotes.**
 
@@ -18,9 +20,9 @@ La reposición es candidata, aún pendiente de selección del equipo. Se conserv
 
 ## Confirmado y pendiente
 
-Confirmados: PanelaTeam, tiendas de abarrotes con secciones diferenciadas, material visual de internet y necesidad de independencia con Slack/correo. El usuario confirmó que **todavía no hay cuentas de prueba disponibles**. Faltan video, primer escenario, cuentas/contactos, política, stack, equipo, presupuesto y criterios del piloto.
+Confirmados: equipo PanelaTeam, solución Panela Stocks, tiendas de abarrotes con secciones diferenciadas, material visual de internet y necesidad de independencia con Slack/correo. El usuario confirmó que **todavía no hay cuentas de prueba disponibles**. Ya se eligió un video CCTV y se construyó el recorrido local de revisión por permanencia con JavaScript/Vite, Node.js y SQLite. Faltan cuentas/contactos, política operativa completa, presupuesto y criterios del piloto.
 
-No hay implementación, conexiones o resultados de desempeño acreditados. Las fuentes conservan procedencia: video/replay/anotación, datos comerciales ficticios o reales. Cámara no prueba venta ni existencias en bodega; permanencia necesita seguimiento; una promoción requiere datos comerciales y evaluación adecuada.
+Existe una implementación parcial de video, casos y outbox, descrita en el [README](../README.md). No hay conexiones externas comprobadas ni resultados de desempeño comercial acreditados. Las fuentes conservan procedencia: video/replay/anotación, datos comerciales ficticios o reales. Cámara no prueba venta ni existencias en bodega; permanencia necesita seguimiento; una promoción requiere datos comerciales y evaluación adecuada.
 
 ## Cómo se comprobará el valor
 
@@ -29,4 +31,4 @@ No hay implementación, conexiones o resultados de desempeño acreditados. Las f
 - Reintento o reconexión conserva tareas y evita reenvío ciego.
 - Se mide coordinación del supervisor, acciones rutinarias correctamente resueltas sin intervención puntual, ruido y cierre; la ejecución física se cuenta aparte.
 
-Las [bases revisadas](research/02_Bases_y_Estrategia_PanelaTeam_v0.2.md) orientan estas mejoras, sin garantizar una nota. Las [misiones para Perplexity](research/03_Perplexity_Misiones_PanelaTeam_v0.2.md) preparan investigación de material, mercado y crítica; siguen sin ejecutar.
+Las [bases revisadas](research/02_Bases_y_Estrategia_PanelaTeam_v0.2.md) orientan estas mejoras, sin garantizar una nota. Las [misiones para Perplexity](research/03_Perplexity_Misiones_PanelaTeam_v0.2.md) definen investigación de material, mercado y crítica; el usuario aportó informes como insumos, sin que ello acredite validación del producto.

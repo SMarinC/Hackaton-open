@@ -2,6 +2,8 @@
 
 Cada observación requiere `request_id` estable para reintentos y `expected_version` igual a la versión actual del caso para una solicitud nueva. Repetir el mismo ID con el mismo contenido devuelve `duplicate: true` sin nuevos efectos, incluso si el caso ya avanzó. Reutilizarlo con contenido distinto o registrar una nueva solicitud contra una versión anterior devuelve 409. Una observación posterior puede repetir el texto anterior si usa un ID nuevo y la versión vigente.
 
+Los casos nuevos conservan `source` como evidencia inmutable de su evento inicial y lo identifican mediante `source_integrity: "opening_event_v1"`. Cada evento posterior guarda su propio payload validado en `events.payload`, sin reescribir fuente, versión ni cierre del caso. La migración agrega esa columna sin borrar datos; eventos anteriores quedan con `payload = NULL` y casos anteriores no reciben el marcador. La interfaz advierte que esas duraciones históricas pudieron mezclarse con eventos posteriores: no se reconstruye evidencia que ya no está disponible.
+
 Cada evento puede conservar `detector` (texto), `threshold_s` (número positivo hasta 86400) y `zone_polygon` (3 a 20 vértices `[x, y]`, coordenadas entre 0 y 1) en `case.source`. Son la configuración de evidencia declarada por el detector del navegador; no una verificación independiente. El servidor registra sus propias fechas de recepción, sin confiar en `observed_at` para ordenar operaciones.
 
 `node server/index.js` escucha en `127.0.0.1:8787` y sirve `dist/` si está construido. Requiere Node >=22.13 por `node:sqlite`. La base se conserva en `data/private/panela.sqlite`; no se debe versionar.

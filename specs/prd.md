@@ -1,13 +1,16 @@
-# PRD — PanelaTeam: operación autónoma de tiendas de abarrotes
+# PRD — Panela Stocks: operación autónoma de tiendas de abarrotes
 
 **Versión 0.2 · 12 de septiembre de 2026 · Borrador completo con adenda de construcción por video**
+
+**Arquitectura objetivo añadida el 2026-09-12:** el usuario pidió documentar agentes, comunicaciones, contenedores multicloud y alternativas de proveedores. El [diseño objetivo](../docs/architecture/target.md) separa capacidades actuales, OpenRouter para inferencia, Exa para búsqueda web, despliegue portable y controles de comunicación. Es una dirección de diseño, no una selección de proveedor, despliegue o aceptación de D0.
 
 **Adenda 2026-09-12:** el usuario priorizó análisis temporal de video y pidió iniciar código; también pidió incorporar el cambio remoto `613ce94`, que reafirma Slack y correo obligatorios. Se construye la unidad U01: COCO-SSD local → seguimiento por zonas → evento de permanencia → revisión de sección → caso persistente y salida pendiente. El [README](../README.md) registra lo ejecutable y sus límites. Una confirmación local prueba transiciones; no satisface FR-08 ni acredita autonomía completa. Los requisitos D0 se conservan y su aceptación sigue pendiente.
 
 | Campo | Estado |
 |---|---|
 | Responsable de producto | PanelaTeam; aprobador nominal pendiente |
-| Producto | Nombre comercial pendiente; PanelaTeam es el nombre confirmado del equipo |
+| Producto | Panela Stocks; nombre confirmado por el usuario el 2026-09-12 |
+| Equipo | PanelaTeam |
 | Fuente de visión | [PVB de operación autónoma v0.2](../docs/02_PVB_PanelaTeam_Operacion_Autonoma_v0.2.md), con [PVB v0.1](../docs/01_PVB_PanelaTeam_Operacion_Abarrotes_v0.1.md) como antecedente |
 | Base de construcción | Commit `613ce94`, que incorpora el cambio del equipo sobre Slack/correo |
 | Alcance de este incremento | U01 de video y casos locales; integración bidireccional queda para U02 |
@@ -44,7 +47,7 @@ Las decisiones de integridad evitan conclusiones que las fuentes no permiten. La
 
 ## 1. Producto, trabajo del usuario y misión
 
-**Producto en una frase:** PanelaTeam observa tiendas de abarrotes seccionadas y gestiona casos con sus responsables por Slack y correo: consulta, asigna, recuerda, escala y reporta hasta obtener un resultado verificable, dentro de una política operativa autorizada.
+**Producto en una frase:** Panela Stocks observa tiendas de abarrotes seccionadas y gestiona casos con sus responsables por Slack y correo: consulta, asigna, recuerda, escala y reporta hasta obtener un resultado verificable, dentro de una política operativa autorizada.
 
 **JTBD:** Cuando una sección presenta una situación que puede afectar su operación, quiero que el agente reúna contexto, consulte al responsable y mantenga la gestión hasta su cierre, para dedicar menos trabajo a coordinar cada mensaje y concentrarme en la operación y sus excepciones.
 
@@ -58,7 +61,7 @@ Hipótesis de problema: señales de falta en exhibición, datos de stock y respu
 
 Alternativas a investigar: rondas manuales, listas de reposición, reportes del POS, mensajería y software de ejecución retail. No se ha confirmado cuál usa el primer cliente ni que sea insuficiente.
 
-Hay oferta comercial de análisis de estantes y coordinación: [Focal](https://focal.systems/shelf-cameras/) describe cámaras y tareas de reposición; [Trax/FORM](https://traxretail.com/es/) combina análisis visual y gestión de tareas. Estas referencias sostienen la existencia de la categoría, no una oportunidad desatendida o ventajas medidas de PanelaTeam.
+Hay oferta comercial de análisis de estantes y coordinación: [Focal](https://focal.systems/shelf-cameras/) describe cámaras y tareas de reposición; [Trax/FORM](https://traxretail.com/es/) combina análisis visual y gestión de tareas. Estas referencias sostienen la existencia de la categoría, no una oportunidad desatendida o ventajas medidas de Panela Stocks.
 
 **Por qué ahora:** la hackathon permite probar un recorrido pequeño; la oportunidad comercial depende de acceso, calidad de captura y voluntad de adopción. Tamaño de mercado, urgencia del comprador y ahorro esperado: **TBD**.
 
@@ -87,14 +90,14 @@ Hipótesis: una configuración acotada por sección, contexto comercial explíci
 
 Ventaja defendible, precio y disposición a pagar: TBD. Integraciones y confianza basadas en evidencia podrían acumular valor; todavía no constituyen una barrera competitiva demostrada.
 
-**Matriz 2×2 por investigar:** ejes propuestos, esfuerzo de puesta en marcha y amplitud del ciclo operativo comprobado. Se deben ubicar PanelaTeam, Focal, Trax/FORM y el flujo actual después de un benchmark con la misma rúbrica. No se asignan coordenadas ficticias.
+**Matriz 2×2 por investigar:** ejes propuestos, esfuerzo de puesta en marcha y amplitud del ciclo operativo comprobado. Se deben ubicar Panela Stocks, Focal, Trax/FORM y el flujo actual después de un benchmark con la misma rúbrica. No se asignan coordenadas ficticias.
 
 | Alternativa | Capacidad documentada | Datos que faltan para comparar |
 |---|---|---|
 | Flujo actual de la tienda | Aún no observado | Tiempo, herramientas, errores y responsables |
 | Focal | Visión de estante y tareas de reposición publicadas | Ajuste al segmento, instalación y condiciones comerciales |
 | Trax/FORM | Análisis visual y gestión de tareas publicados | Integración, operación y costo para la tienda elegida |
-| PanelaTeam | Diseño y criterios de prueba | Todo desempeño y valor requieren demostración/piloto |
+| Panela Stocks | Diseño y criterios de prueba | Todo desempeño y valor requieren demostración/piloto |
 
 **Fuente:** PVB §12. La investigación de validación y crítica extensa de la Estación 1 permanece pendiente; el PRD no la presenta como realizada.
 

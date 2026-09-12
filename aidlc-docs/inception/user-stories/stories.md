@@ -1,4 +1,4 @@
-# Historias de usuario — PanelaTeam
+# Historias de usuario — Panela Stocks
 
 **Versión:** 0.2 · **Fecha:** 2026-09-12 · **Estado:** borrador de Inception incluido en el PRD, pendiente de revisión.
 

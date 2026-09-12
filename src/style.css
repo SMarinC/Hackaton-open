@@ -196,11 +196,19 @@ h3 {
   gap: 18px;
 }
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
   color: var(--ink);
   font-size: 1.1rem;
   font-weight: 750;
   letter-spacing: -.04em;
   text-decoration: none;
+}
+.wordmark img {
+  display: block;
+  width: 200px;
+  height: auto;
 }
 .topbar-subtitle {
   padding-left: 18px;
@@ -1058,6 +1066,7 @@ h3 {
   }
 }
 @media (max-width: 620px) {
+  .wordmark img { width: 160px; }
   .topbar-inner {
     gap: 8px;
     padding-right: 14px;

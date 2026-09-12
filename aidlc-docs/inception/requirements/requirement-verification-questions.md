@@ -1,4 +1,4 @@
-# Preguntas y decisiones — PRD PanelaTeam
+# Preguntas y decisiones — PRD Panela Stocks
 
 **Versión 0.2 · Estado: decisiones parcialmente confirmadas; validación y gates pendientes · 12 de septiembre de 2026**
 
@@ -9,6 +9,7 @@ Las respuestas conocidas se conservan separadas de las propuestas. Ninguna opci�
 | Asunto | Respuesta del usuario / evidencia |
 |---|---|
 | Equipo | “nuestro equipo es PanelaTeam” |
+| Solución | “Panela Stocks”; nombre confirmado por el usuario el 2026-09-12 |
 | Segmento | “tiendas seccionadas de abarrotes que tengan distincion” |
 | Material de demo | “vamos a usar imagenes y videos de internet” |
 | Visión | Conexión de cámaras, información estructurada y agentes que coordinen stock/cambios y evalúen secciones, productos, permanencia y promociones |

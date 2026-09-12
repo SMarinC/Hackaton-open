@@ -440,7 +440,7 @@ function useReference() {
   $("source-kind").textContent =
     "Reproducción histórica · análisis en este navegador";
   $("source-note").innerHTML =
-    `Fuente: <a href="${escapeHtml(manifest.source_page)}" target="_blank" rel="noreferrer">HDCCTV Cameras / Wikimedia Commons</a>. Grabación histórica de productos para el hogar; zonas propuestas para explorar circulación. Derechos: PD-automated según ficha de Commons. No es una tienda de PanelaStocks ni una cámara en vivo.`;
+    `Fuente: <a href="${escapeHtml(manifest.source_page)}" target="_blank" rel="noreferrer">HDCCTV Cameras / Wikimedia Commons</a>. Grabación histórica de productos para el hogar; zonas propuestas para explorar circulación. Derechos: PD-automated según ficha de Commons. No es una tienda de Panela Stocks ni una cámara en vivo.`;
   $("reference").hidden = true;
   $("analyze").textContent = "Analizar video";
 }
@@ -578,7 +578,7 @@ $("export").addEventListener("click", () => {
   );
   const link = document.createElement("a");
   link.href = url;
-  link.download = `panelateam-evidence-${new Date().toISOString().slice(0, 10)}.json`;
+  link.download = `panela-stocks-evidence-${new Date().toISOString().slice(0, 10)}.json`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
